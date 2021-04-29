@@ -41,7 +41,7 @@ public class LoginController {
         if (!request.containsKey("email")) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         Account account = accountService.getAccountByEmail(request.get("email").toString());
         if (account == null || !authService.login(account, strategy, request))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "", null);
 
         String token = jwtService.generateToken(account);
 
