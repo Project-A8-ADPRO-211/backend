@@ -11,21 +11,19 @@ public class ManageAccountController {
     @GetMapping(produces = {"application/json"}, path = "/base")
     @ResponseBody
     public ResponseEntity<Account> harusLoginAja(Account account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
+        // Instance account udh bisa dipake kaya kalo make accountService
         return ResponseEntity.ok(account);
     }
 
     @GetMapping(produces = {"application/json"}, path = "/buyer")
     @ResponseBody
     public ResponseEntity<Buyer> cumaBolehBuyer(Buyer account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
         return ResponseEntity.ok(account);
     }
 
     @GetMapping(produces = {"application/json"}, path = "/seller")
     @ResponseBody
     public ResponseEntity<Seller> cumaBolehSeller(Seller account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
         return ResponseEntity.ok(account);
     }
 }
