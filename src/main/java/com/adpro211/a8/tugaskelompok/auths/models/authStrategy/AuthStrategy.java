@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 public abstract class AuthStrategy {
 
-    public abstract String getName();
+    public abstract String getStrategyName();
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -22,6 +22,6 @@ public abstract class AuthStrategy {
     @ManyToOne
     private Account assignedUser;
 
-    abstract boolean authenticate(Map<String, Object> requestBody);
+    public abstract boolean authenticate(Map<String, Object> requestBody);
 
 }

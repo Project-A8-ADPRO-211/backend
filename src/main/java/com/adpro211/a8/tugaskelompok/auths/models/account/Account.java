@@ -9,9 +9,9 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "AccountTbl")
+@Table(name = "account_tbl")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="account_type", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorColumn(name="account_type", discriminatorType = DiscriminatorType.STRING)
 @Data
 public abstract class Account {
 
@@ -28,5 +28,8 @@ public abstract class Account {
     @OneToMany(mappedBy = "assignedUser")
     @JsonIgnore
     private Set<AuthStrategy> authStrategies;
+
+    @Column(name="account_type", nullable=false, insertable = false, updatable = false)
+    private String accountType;
 
 }
