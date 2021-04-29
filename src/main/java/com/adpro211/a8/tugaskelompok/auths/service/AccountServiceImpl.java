@@ -7,8 +7,14 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.models.authStrategy.PasswordStrategy;
 import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.auths.repository.PasswordStrategyRepository;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.annotation.PostConstruct;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -19,21 +25,38 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     PasswordStrategyRepository passwordStrategyRepository;
 
+    EmailValidator emailValidator;
+
+    @PostConstruct
+    public void setUp() {
+        emailValidator = EmailValidator.getInstance(true);
+    }
+
     @Override
     public Account createNewAccount(String name, String email, String password, String type) {
+
+        if (!emailValidator.isValid(email)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email");
+
         Account account;
         switch (type) {
             case "admin":
                 account = new Administrator();
+                break;
             case "seller":
                 account = new Seller();
+                break;
             default:
                 account = new Buyer();
+                break;
         }
         account.setAccountType(type);
         account.setEmail(email);
         account.setName(name);
-        accountRepository.save(account);
+        try {
+            accountRepository.save(account);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duplicate email");
+        }
 
         PasswordStrategy passwordStrategy = new PasswordStrategy();
         passwordStrategy.setAssignedUser(account);
