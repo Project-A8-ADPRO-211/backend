@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.auths.resolver;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireSeller;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.repository.SellerRepository;
@@ -13,7 +14,12 @@ public class SellerAccountFromTokenResolver extends BaseAccountFromTokenResolver
 
 
     @Override
-    protected Class getAccountTypeClass() {
+    protected Class getAnnotationClass() {
+        return RequireSeller.class;
+    }
+
+    @Override
+    protected Class getAccountSubtypeClass() {
         return Seller.class;
     }
 

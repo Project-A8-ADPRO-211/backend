@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.auths.controller;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireLoggedIn;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
@@ -16,22 +17,19 @@ import java.util.Map;
 public class ManageAccountController {
     @GetMapping(produces = {"application/json"}, path = "/base")
     @ResponseBody
-    public ResponseEntity<Account> getBaseAccount(Account account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
+    public ResponseEntity<Account> getBaseAccount(@RequireLoggedIn Account account) {
         return ResponseEntity.ok(account);
     }
 
     @GetMapping(produces = {"application/json"}, path = "/buyer")
     @ResponseBody
     public ResponseEntity<Buyer> getListLog(Buyer account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
         return ResponseEntity.ok(account);
     }
 
     @GetMapping(produces = {"application/json"}, path = "/seller")
     @ResponseBody
     public ResponseEntity<Seller> getSeller(Seller account) {
-        if (account == null) throw new ResponseStatusException(HttpStatus.OK," account.getEmail()");
         return ResponseEntity.ok(account);
     }
 

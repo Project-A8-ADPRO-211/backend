@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.auths.resolver;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireAdmin;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Administrator;
 import com.adpro211.a8.tugaskelompok.auths.repository.AdminRepository;
@@ -12,7 +13,12 @@ public class AdminAccountFromTokenResolver extends BaseAccountFromTokenResolver 
     AdminRepository adminRepository;
 
     @Override
-    protected Class getAccountTypeClass() {
+    protected Class getAnnotationClass() {
+        return RequireAdmin.class;
+    }
+
+    @Override
+    protected Class getAccountSubtypeClass() {
         return Administrator.class;
     }
 

@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.auths.resolver;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireLoggedIn;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.auths.service.JWTService;
@@ -29,13 +30,19 @@ public class BaseAccountFromTokenResolver implements HandlerMethodArgumentResolv
         this.jwtService = jwtService;
     }
 
-    protected Class getAccountTypeClass() {
+    protected Class getAnnotationClass() {
+        return RequireLoggedIn.class;
+    }
+
+    protected Class getAccountSubtypeClass() {
         return Account.class;
-    };
+    }
 
     @Override
     public final boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(getAccountTypeClass());
+        return parameter.getParameterAnnotation(getAnnotationClass()) != null &&
+                (parameter.getParameterType().equals(Account.class) ||
+                        parameter.getParameterType().equals(getAccountSubtypeClass()));
     }
 
     protected boolean checkAccount(Account account) {
@@ -48,7 +55,7 @@ public class BaseAccountFromTokenResolver implements HandlerMethodArgumentResolv
 
     @Override
     public final Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                                        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorizationHeader = webRequest.getHeader("Authorization");
         if (authorizationHeader == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         String decodedToken = jwtService.verifyToken(authorizationHeader);
