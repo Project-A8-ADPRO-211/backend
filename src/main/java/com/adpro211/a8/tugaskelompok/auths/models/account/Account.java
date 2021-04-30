@@ -1,11 +1,13 @@
 package com.adpro211.a8.tugaskelompok.auths.models.account;
 
 import com.adpro211.a8.tugaskelompok.auths.models.authStrategy.AuthStrategy;
+import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,6 +30,10 @@ public abstract class Account {
     @OneToMany(mappedBy = "assignedUser")
     @JsonIgnore
     private Set<AuthStrategy> authStrategies;
+
+    @OneToMany(mappedBy = "ownerAccount")
+    @JsonIgnore
+    private List<Product> productList;
 
     @Column(name="account_type", nullable=false, insertable = false, updatable = false)
     private String accountType;
