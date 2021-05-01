@@ -41,6 +41,7 @@ public class JWTServiceImpl implements JWTService{
         return JWT.create()
                 .withIssuer(jwtIssuer)
                 .withSubject(String.valueOf(subject.getId()))
+                .withClaim("type", subject.getAccountType())
                 .withIssuedAt(currentDate)
                 .withExpiresAt(tomorrow.toDate())
                 .sign(algorithm);

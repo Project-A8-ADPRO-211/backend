@@ -24,9 +24,22 @@ public class SignupController {
         private String type;
     }
 
+    @Data
+    @NoArgsConstructor
+    private static class SsoSignup {
+        private String ticket;
+        private String name;
+    }
+
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
     @ResponseBody
-    public ResponseEntity<Account> getListLog(@RequestBody UserSignUp signUpData) {
+    public ResponseEntity<Account> signUpPassword(@RequestBody UserSignUp signUpData) {
+        return ResponseEntity.ok(accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type));
+    }
+
+    @PostMapping(produces = {"application/json"}, consumes = {"application/json"}, path = "/sso")
+    @ResponseBody
+    public ResponseEntity<Account> signUpSSO(@RequestBody UserSignUp signUpData) {
         return ResponseEntity.ok(accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type));
     }
 }

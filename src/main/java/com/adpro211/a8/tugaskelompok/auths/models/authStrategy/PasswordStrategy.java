@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.auths.models.authStrategy;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +22,12 @@ public class PasswordStrategy extends AuthStrategy {
     private String password;
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
     @Override
     public boolean authenticate(Map<String, Object> requestBody) {
-        return requestBody.containsKey("password") && requestBody.get("password").toString().equals(this.password);
+        return requestBody.containsKey("password") &&
+                BCrypt.verifyer().verify(requestBody.get("password").toString().toCharArray(), this.password).verified;
     }
 }
