@@ -47,6 +47,7 @@ dependencies {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 asciidoctor {
