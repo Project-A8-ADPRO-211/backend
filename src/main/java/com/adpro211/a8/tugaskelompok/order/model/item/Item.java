@@ -1,6 +1,7 @@
-package com.adpro211.a8.tugaskelompok.order.model;
+package com.adpro211.a8.tugaskelompok.order.model.item;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 public class Item {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "items_id", updatable = false, nullable = false)
     private int items_id;
 
@@ -29,5 +31,6 @@ public class Item {
     private Account productOwner;
 
     @ManyToOne
-    private Order orderOwner;
+    private Order listedInLine;
+
 }
