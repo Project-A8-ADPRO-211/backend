@@ -72,6 +72,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account createNewAccountSSO(String name, String ticket) {
+        return null;
+    }
+
+    @Override
     public boolean updateAccountPass(Account account, String newPassword) {
         for (AuthStrategy strategy : account.getAuthStrategies()) {
             if (!strategy.getClass().equals(PasswordStrategy.class)) continue;

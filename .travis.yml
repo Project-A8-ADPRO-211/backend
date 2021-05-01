@@ -1,0 +1,32 @@
+sudo: required
+language: java
+jdk: oraclejdk11
+
+services:
+  - docker
+
+env:
+  global:
+    - secure: "FIGkQ4SlNWDpgNcZyGEnN1VY654BpQIZXekLTDTKm/ce9N6uTY/RU8gAF+OcY53ps4cMNgS10IjoiPgRZzJdaAzvYrcJExIOSpuUBKV2Ye3Ue3Xxkb4AJyv73u2Sc8n3jAxgfIxcpCuf5DZp5xvQdAjAoqhbgYxvXWPZTsK0420MxsJMf29RId4TwN/7FaGGMZQt8wqmuc3X4xsxd3xCKlakWhozsan2ybixTnpBh48BSdZhFeRCgp33rxUB
+      h0z+8jwayeKZF9EonL2phkzZVwmUUsaPIMn9mzXsppG3vfwmw+AiiT9jGVYXv9M3D7T2ueObawBeyvovM8mf2BDN+6704N0I+ixSKm6wf97YqiOcpktti9xIBWnwjp/71dWrvy9ymngH5tp65LRDd7iyiPguCIZ3Fj4VqPejQz7KlmUsl033ADtJKflAaw3c+OVAiO+cuulIOzLvXYqnomjDyiX99oJoP3hJCo5zLg5rgmzBmONZB7Jw5y/SS+pG0mzN2gi
+      DuRHLX2GPAcpHLq2066dG5Kow8+GpEUwj7au/vU9vJv9Qc50BZu3Z/5brZbsmaW+GX5n90L07Ad10o6RnEbQjNCg5t8TrTpUdFnA9opH/0EyCQmdHp6t141GZN8BY7edlxCENi/itiIirPJEIHSf1x2QEzmzwdchPsYXpxco="
+    - secure: "hUhIhbV13ADDGosQHBMRxg8DxGuAF3qiNT3FMfYDpD9w98YiP42juo1rGOBPnUtNo/ldoRfR2nZf1DgRgsbg+MsGYPBnjlYicAzO+FSe4EOstz83T18MhfbCZljIFT4taMPiuKu7rPq23ry01oHr9m9JrnMcNYdOefT+GQ1LXzWKCf3SJN9c9RTIGIU3Mw8Zlu8k6zTCGMEVivGWawKk2IFypgAtAJuBhb9viG3E1ZTITg3re5/R9rtSuuG/
+      6QWjfSbOmW4cEyfn/yEYF9rzmTc/yQvdNgs70jbmDRYJ8knhqYeWvLOulRYU3g+4EQ500T2pLSXcPvGk3pP7bSWgp4RiDP4Z97SHfP9ZoAiQDZQH8WKNWCSe/8Gc7I9evHxl7DxmyzBfn9/icfIp/CeHAEgxKnyg9Bn7AoYBedtOpWuBCZm0I9MMQJ0DL8RbVqmQ/jkO2SSaIq02xQaZ75FihM/LPjQ3T94zsEpRt50a0iSuCBL+HO8b+h0Kb5DuuAKwaen
+      K2tYzKprS6ZaY7PNN6+3zWIYpPFkz5dp62szBys5McXYJMvyC7z7z7o9iL8QIGzD85LLKF9XCHj+H85AassUPMTgmR8Hz3QnpsP4vTBxwVniVXuqBlZ6RKxO5tdVXQJZVssSfdhvHJcpoBvPLQHqBJYZ3ZR+kfvcnuTNODH4="
+    - COMMIT=${TRAVIS_COMMIT::7}
+
+
+script:
+  - ./gradlew clean build
+  - bash <(curl -s https://codecov.io/bash)
+
+after_success:
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=adproa8211/tk
+  - docker build --build-arg JAR_FILE=build/libs/\*.jar -t $IMAGE_NAME:$COMMIT .
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: adpro-a8

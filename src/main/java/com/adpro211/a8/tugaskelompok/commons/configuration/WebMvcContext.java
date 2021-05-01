@@ -4,6 +4,8 @@ import com.adpro211.a8.tugaskelompok.auths.resolver.AdminAccountFromTokenResolve
 import com.adpro211.a8.tugaskelompok.auths.resolver.BaseAccountFromTokenResolver;
 import com.adpro211.a8.tugaskelompok.auths.resolver.BuyerAccountFromTokenResolver;
 import com.adpro211.a8.tugaskelompok.auths.resolver.SellerAccountFromTokenResolver;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
