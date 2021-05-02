@@ -1,9 +1,12 @@
 package com.adpro211.a8.tugaskelompok.product.controller;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireSeller;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.service.ProductService;
+import org.hibernate.cache.spi.SecondLevelCacheLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +27,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
-    @PostMapping(path = "/{id}" ,produces = {"application/json"})
+    @PostMapping(path = "/create/{id}" ,produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity createProduct(@PathVariable(value = "id") int id ,@RequestBody Product product) {
+    public ResponseEntity createProduct(@PathVariable(value = "id") int id, @RequestBody Product product) {
         return ResponseEntity.ok(productService.createNewProduct(product.getName(), product.getDescription(), product.getPrice(), product.getStock(), id, product.getImageUrl()));
     }
 
@@ -36,10 +39,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    //TODO : next time, change put with patch with parameter
-    @PutMapping(path = "/{id}", produces = {"application/json"})
+    @PutMapping(path = "/update/{id}", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateProduct(@PathVariable(value = "id") int id, @RequestBody Product product) {
+    public ResponseEntity updateProduct(@PathVariable(value = "id") int id, @RequestBody Product product, @RequireSeller Seller seller) {
+        product.setOwnerAccount(seller);
         return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 
