@@ -39,7 +39,7 @@ public abstract class Account {
     @Column(name="account_type", nullable=false, insertable = false, updatable = false)
     private String accountType;
 
-    @OneToOne(mappedBy = "wallet")
+    @OneToOne(mappedBy = "account")
     private Wallet wallet;
 
 }
