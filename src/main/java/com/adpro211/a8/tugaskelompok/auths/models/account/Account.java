@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.auths.models.account;
 
 import com.adpro211.a8.tugaskelompok.auths.models.authStrategy.AuthStrategy;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
+import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
@@ -41,5 +42,8 @@ public abstract class Account {
 
     @Column(name="account_type", nullable=false, insertable = false, updatable = false)
     private String accountType;
+
+    @OneToOne(mappedBy = "account")
+    private Wallet wallet;
 
 }
