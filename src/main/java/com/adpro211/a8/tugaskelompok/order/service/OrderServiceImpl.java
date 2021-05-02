@@ -2,15 +2,14 @@ package com.adpro211.a8.tugaskelompok.order.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
-import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
+import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.repository.ItemRepository;
 import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
-import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,23 +21,20 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    AccountService accountService;
 
     @Autowired
     ItemRepository itemRepository;
 
     public Order createOrder(boolean paymentReceived, int buyerId, int sellerId) {
         Order order = new Order();
-        Account buyer = accountRepository.findById(buyerId);
-        Account seller = accountRepository.findById(sellerId);
+        Buyer buyer = (Buyer) accountService.getAccountById(buyerId);
+        Seller seller = (Seller) accountService.getAccountById(sellerId);
 
         order.setOrderBuyer(buyer);
         order.setOrderSeller(seller);
         order.setPaymentReceived(paymentReceived);
         order.setCurrentState(new OpenState(order));
-
-        Iterable<Item> itemList = itemRepository.findAllByOrder(order);
-        order.setItemList(itemList);
 
         try {
             orderRepository.save(order);

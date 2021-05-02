@@ -40,14 +40,6 @@ public abstract class Account {
     @JsonIgnore
     private List<Product> productList;
 
-    @OneToMany(mappedBy = "orderAccount")
-    @JsonIgnore
-    private List<Order> orderListByBuyer;
-
-    @OneToMany(mappedBy = "orderSeller")
-    @JsonIgnore
-    private List<Order> orderListBySeller;
-
     @Column(name = "account_type", nullable = false, insertable = false, updatable = false)
     private String accountType;
 

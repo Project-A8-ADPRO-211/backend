@@ -47,11 +47,9 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findItembyId(id);
     }
 
-    public Iterable<Item> getItemsByOrder(Order order) {
+    public Iterable<Item> getItemsByOrderId(int orderId) {
+        Order order = orderRepository.findOrderById(orderId);
         return itemRepository.findAllByOrder(order);
     }
 
-    public Iterable<Item> getAllItems() {
-        return itemRepository.findAll();
-    }
 }

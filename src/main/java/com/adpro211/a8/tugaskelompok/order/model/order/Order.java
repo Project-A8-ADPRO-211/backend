@@ -1,10 +1,11 @@
 package com.adpro211.a8.tugaskelompok.order.model.order;
 
-import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
+import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,20 +20,20 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "order_id", updatable = false, nullable = false)
-    private int order_id;
+    private int Id;
 
     @OneToMany(mappedBy = "listedInOrder")
     @JsonIgnore
-    private Iterable<Item> itemList;
+    private List<Item> itemList;
 
     @Column
     private boolean paymentReceived;
 
     @ManyToOne
-    private Account orderBuyer;
+    private Buyer orderBuyer;
 
     @ManyToOne
-    private Account orderSeller;
+    private Seller orderSeller;
 
     @Column
     private OrderState currentState;
