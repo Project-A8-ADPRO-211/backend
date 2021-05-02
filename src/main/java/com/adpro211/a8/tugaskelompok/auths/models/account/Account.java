@@ -5,7 +5,9 @@ import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +17,9 @@ import java.util.Set;
 @Table(name = "account_tbl")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "account_type", discriminatorType = DiscriminatorType.STRING)
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 public abstract class Account {
 
     @Id
@@ -38,7 +42,11 @@ public abstract class Account {
 
     @OneToMany(mappedBy = "orderAccount")
     @JsonIgnore
-    private List<Order> orderList;
+    private List<Order> orderListByBuyer;
+
+    @OneToMany(mappedBy = "orderSeller")
+    @JsonIgnore
+    private List<Order> orderListBySeller;
 
     @Column(name = "account_type", nullable = false, insertable = false, updatable = false)
     private String accountType;

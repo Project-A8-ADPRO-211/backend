@@ -2,14 +2,17 @@ package com.adpro211.a8.tugaskelompok.auths.models.authStrategy;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Map;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public abstract class AuthStrategy {
 

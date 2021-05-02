@@ -1,11 +1,14 @@
 package com.adpro211.a8.tugaskelompok.order.service;
 
+import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public interface OrderService {
     Order createOrder(boolean paymentReceived, String email);
 
-    Iterable<Order> getOrdersbyAccountEmail(String name);
+    Iterable<Order> getOrdersByBuyer(Buyer buyer);
+
+    Iterable<Order> getOrdersBySeller(Seller seller);
 
     Order getOrderById(int id);
 

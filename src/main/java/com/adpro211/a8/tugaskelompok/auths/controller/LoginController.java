@@ -6,6 +6,7 @@ import com.adpro211.a8.tugaskelompok.auths.service.AuthService;
 import com.adpro211.a8.tugaskelompok.auths.service.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RequestMapping(path = "/login")
 public class LoginController {
 
-    @Data
+    @Getter
     @AllArgsConstructor
     private class TokenResponse {
         private String token;
@@ -38,10 +39,10 @@ public class LoginController {
     @PostMapping(produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<TokenResponse> getListLog(@RequestParam String strategy, @RequestBody Map<String, Object> request) {
-        if (!request.containsKey("email")) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+        if (!request.containsKey("email")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         Account account = accountService.getAccountByEmail(request.get("email").toString());
         if (account == null || !authService.login(account, strategy, request))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "", null);
 
         String token = jwtService.generateToken(account);
 
