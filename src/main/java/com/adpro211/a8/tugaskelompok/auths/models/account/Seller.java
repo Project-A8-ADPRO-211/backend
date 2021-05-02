@@ -11,4 +11,5 @@ import javax.persistence.Entity;
 @Data
 @NoArgsConstructor
 public class Seller extends Account {
+
 }
