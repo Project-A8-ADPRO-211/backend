@@ -19,8 +19,4 @@ public interface OrderState {
     public OrderState orderDelivered();
 
     public boolean isFinished();
-
-    // public OrderState orderLost();
-
-    // public OrderState orderFound();
 }

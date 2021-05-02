@@ -31,6 +31,6 @@ public class Item {
     private Account productOwner;
 
     @ManyToOne
-    private Order listedInLine;
+    private Order listedInOrder;
 
 }

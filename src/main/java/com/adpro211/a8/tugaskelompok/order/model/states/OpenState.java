@@ -46,8 +46,4 @@ public class OpenState implements OrderState {
         return false;
     }
 
-    // public OrderState orderLost();
-
-    // public OrderState orderFound();
-
 }
