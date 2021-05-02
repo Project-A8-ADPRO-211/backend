@@ -77,17 +77,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountPass(Account account, String newPassword) {
+    public Account updateAccountPass(Account account, String newPassword) {
         for (AuthStrategy strategy : account.getAuthStrategies()) {
             if (!strategy.getClass().equals(PasswordStrategy.class)) continue;
 
             PasswordStrategy passwordStrategy = (PasswordStrategy) strategy;
             passwordStrategy.setPassword(newPassword);
             passwordStrategyRepository.save(passwordStrategy);
-            return true;
+            return account;
 
         }
-        return false;
+        return null;
     }
 
     @Override

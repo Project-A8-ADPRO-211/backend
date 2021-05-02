@@ -41,8 +41,8 @@ public class BaseAccountFromTokenResolver implements HandlerMethodArgumentResolv
     @Override
     public final boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterAnnotation(getAnnotationClass()) != null &&
-                (parameter.getParameterType().equals(Account.class) ||
-                        parameter.getParameterType().equals(getAccountSubtypeClass()));
+                (parameter.getParameterType().equals(getAccountSubtypeClass()) ||
+                                parameter.getParameterType().equals(Account.class));
     }
 
     protected boolean checkAccount(Account account) {
