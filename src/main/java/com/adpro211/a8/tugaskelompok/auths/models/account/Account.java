@@ -37,6 +37,7 @@ public abstract class Account {
     private List<Product> productList;
 
     @OneToMany(mappedBy = "orderAccount")
+    @JsonIgnore
     private List<Order> orderList;
 
     @Column(name = "account_type", nullable = false, insertable = false, updatable = false)
