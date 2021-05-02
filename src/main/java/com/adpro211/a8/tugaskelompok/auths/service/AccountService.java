@@ -11,6 +11,6 @@ public interface AccountService {
     Account getAccountById(int id);
     Account getAccountByEmail(String email);
     Buyer updateBuyer(Buyer account);
-    boolean updateAccountPass(Account account, String newPassword);
+    Account updateAccountPass(Account account, String newPassword);
 
 }
