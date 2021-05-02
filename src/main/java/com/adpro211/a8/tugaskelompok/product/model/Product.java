@@ -14,14 +14,17 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "product_id")
-    private int productId;
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
     @Column(name = "price" ,nullable = false)
     private int price;
