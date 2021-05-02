@@ -26,6 +26,11 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public Wallet topupWallet() {
+        return null;
+    }
+
+    @Override
     public Wallet getWalletById(int id) {
         return walletRepository.findById(id).orElse(null);
     }
