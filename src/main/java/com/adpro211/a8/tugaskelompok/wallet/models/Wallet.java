@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class Wallet {
     @Id
     @GeneratedValue
-    @Column(name="id_wallet", updatable = false, nullable = false)
-    private int id_wallet;
+    @Column(name="id", updatable = false, nullable = false)
+    private int id;
 
     @Column(name="balance", nullable = false)
     private double balance;
@@ -22,5 +22,7 @@ public class Wallet {
     }
 
     @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
+
 }
