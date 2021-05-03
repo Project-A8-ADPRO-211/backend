@@ -2,9 +2,6 @@ sudo: required
 language: java
 jdk: oraclejdk11
 
-services:
-  - docker
-
 env:
   global:
     - secure: "FIGkQ4SlNWDpgNcZyGEnN1VY654BpQIZXekLTDTKm/ce9N6uTY/RU8gAF+OcY53ps4cMNgS10IjoiPgRZzJdaAzvYrcJExIOSpuUBKV2Ye3Ue3Xxkb4AJyv73u2Sc8n3jAxgfIxcpCuf5DZp5xvQdAjAoqhbgYxvXWPZTsK0420MxsJMf29RId4TwN/7FaGGMZQt8wqmuc3X4xsxd3xCKlakWhozsan2ybixTnpBh48BSdZhFeRCgp33rxUB
@@ -31,20 +28,3 @@ env:
 script:
   - ./gradlew clean build
   - bash <(curl -s https://codecov.io/bash)
-
-before_install:
-  - wget -qO- https://toolbelt.heroku.com/install.sh | sh #installed heroku CLI
-  - docker login -u "$HEROKU_USERNAME" --password=$(heroku auth:token) registry.heroku.com #logged in
-
-
-after_success:
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
-  - export IMAGE_NAME=adproa8211/tk
-  - docker build --build-arg JAR_FILE=build/libs/\*.jar --build-arg SPRING_DATASOURCE_PASSWORD=${dbpass} --build-arg SPRING_DATASOURCE_USERNAME=${dbuser} --build-arg SPRING_DATASOURCE_URL=${dburl} -t $IMAGE_NAME:$COMMIT .
-  - docker tag $IMAGE_NAME:$COMMIT registry.heroku.com/adpro-tk-a8/web
-  - docker push registry.heroku.com/adpro-tk-a8/web
-
-deploy:
-  provider: script
-  script:
-    heroku container:release web --app adpro-tk-a8
