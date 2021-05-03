@@ -1,6 +1,7 @@
 package com.adpro211.a8.tugaskelompok.product.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.repository.ProductRepository;
@@ -20,16 +21,15 @@ public class ProductServiceImpl implements ProductService{
     AccountService accountService;
 
     @Override
-    public Product createNewProduct(String name, String description, int price, int stock, int id, String imageUrl) {
+    public Product createNewProduct(String name, String description, int price, int stock, String imageUrl, Seller seller) {
 
         Product product = new Product();
-        Account account = accountService.getAccountById(id);
 
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setStock(stock);
-        product.setOwnerAccount(account);
+        product.setOwnerAccount(seller);
         product.setImageUrl(imageUrl);
 
         try {

@@ -87,10 +87,7 @@ public class ProductControllerTest {
     void testControllerGetProductSuccess() throws Exception {
         when(productService.getProductById(2)).thenReturn(product);
 
-        mvc.perform(post("/product/create/1").contentType(MediaType.APPLICATION_JSON_VALUE).content(
+        mvc.perform(post("/product/create").header("Authorization", jwtService.generateToken(account)).contentType(MediaType.APPLICATION_JSON_VALUE).content(
                 mapToJson(new Product()))).andExpect(status().is2xxSuccessful());
     }
-
-
-
 }

@@ -1,10 +1,12 @@
 package com.adpro211.a8.tugaskelompok.product.model;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -31,6 +33,10 @@ public class Product {
 
     @Column(name = "stock" ,nullable = false)
     private int stock;
+
+    @OneToMany(mappedBy = "reviewer")
+    @JsonIgnore
+    private List<Review> reviewList;
 
     @ManyToOne
     private Account ownerAccount;

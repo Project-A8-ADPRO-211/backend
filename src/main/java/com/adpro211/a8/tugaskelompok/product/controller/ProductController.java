@@ -6,7 +6,6 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.service.ProductService;
-import org.hibernate.cache.spi.SecondLevelCacheLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +26,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
-    @PostMapping(path = "/create/{id}" ,produces = {"application/json"})
+    @PostMapping(path = "/create" ,produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity createProduct(@PathVariable(value = "id") int id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.createNewProduct(product.getName(), product.getDescription(), product.getPrice(), product.getStock(), id, product.getImageUrl()));
+    public ResponseEntity createProduct(@RequestBody Product product, @RequireSeller Seller seller) {
+        return ResponseEntity.ok(productService.createNewProduct(product.getName(), product.getDescription(), product.getPrice(), product.getStock(), product.getImageUrl(), seller));
     }
 
     @GetMapping(path = "/{id}", produces = {"application/json"})
