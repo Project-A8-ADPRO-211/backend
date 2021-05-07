@@ -21,6 +21,12 @@ public class AuthProperty {
     private String jwtIssuer = "NaradhipaBhary";
 
     @NotNull
+    private String frontendURL = "http://localhost:8000";
+
+    @NotNull
+    private String googleClientID = "http://localhost:8000";
+
+    @NotNull
     private String SsoProviderUrl = "http://sso.ui.ac.id/cas2";
 
     @NotNull
