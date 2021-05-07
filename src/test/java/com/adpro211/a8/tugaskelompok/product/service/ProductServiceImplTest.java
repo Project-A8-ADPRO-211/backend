@@ -2,7 +2,6 @@ package com.adpro211.a8.tugaskelompok.product.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.model.Review;
 import com.adpro211.a8.tugaskelompok.product.repository.ProductRepository;
@@ -13,10 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -86,5 +84,41 @@ public class ProductServiceImplTest {
     void testGetReviewByProductId() {
         Iterable<Review> listReview = new ArrayList<Review>();
         assertEquals(listReview, productService.getReviewByProductId(2));
+    }
+
+    @Test
+    void testUpdateProductSuccess() {
+        product.setPrice(20000);
+        productService.updateProduct(2, product);
+        verify(productRepository, times(1)).save(any());
+    }
+
+    @Test
+    void testGetProductByAccountSuccess() {
+        List<Product> listProducts = new ArrayList<Product>();
+        listProducts.add(product);
+        lenient().when(productRepository.findAllByOwnerAccountIs(seller)).thenReturn(listProducts);
+        assertEquals(listProducts, productService.getProductByAccount(seller));
+    }
+
+    @Test
+    void testSearchProductByNameSuccess() {
+        Iterable<Product> listProduct = new ArrayList<Product>();
+        assertEquals(listProduct, productService.getProductByName("sate"));
+    }
+
+    @Test
+    void testGetAllProductsSuccess() {
+        List<Product> listProducts = new ArrayList<Product>();
+        listProducts.add(product);
+        lenient().when(productRepository.findAll()).thenReturn(listProducts);
+        assertEquals(listProducts, productService.getAllProduct());
+        verify(productRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testDeleteProductsSuccess() {
+        productService.deleteProduct(2);
+        verify(productRepository, times(1)).deleteById(2);
     }
 }
