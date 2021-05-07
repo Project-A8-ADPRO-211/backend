@@ -27,5 +27,5 @@ public class Review {
     private Account reviewer;
 
     @ManyToOne
-    private Product product;
+    private Product productReview;
 }

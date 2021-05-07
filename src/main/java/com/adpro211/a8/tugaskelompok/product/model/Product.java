@@ -28,13 +28,13 @@ public class Product {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "price" ,nullable = false)
+    @Column(name = "price" , nullable = false)
     private int price;
 
-    @Column(name = "stock" ,nullable = false)
+    @Column(name = "stock" , nullable = false)
     private int stock;
 
-    @OneToMany(mappedBy = "reviewer")
+    @OneToMany(mappedBy = "productReview", cascade=CascadeType.REMOVE)
     @JsonIgnore
     private List<Review> reviewList;
 
