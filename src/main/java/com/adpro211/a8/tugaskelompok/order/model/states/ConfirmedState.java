@@ -15,8 +15,6 @@ public class ConfirmedState implements OrderState {
         return "Confirmed";
     }
 
-    // public OrderState addItem(List<Item> items);
-
     @Override
     public OrderState confirmOrder() {
         throw new IllegalStateException("The order is already confirmed");

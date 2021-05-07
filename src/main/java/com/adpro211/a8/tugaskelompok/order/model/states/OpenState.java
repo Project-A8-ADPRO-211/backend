@@ -17,8 +17,6 @@ public class OpenState implements OrderState {
         return "Open";
     }
 
-    // public OrderState addItem(List<Item> items);
-
     @Override
     public OrderState confirmOrder() {
         return new ConfirmedState(order);
