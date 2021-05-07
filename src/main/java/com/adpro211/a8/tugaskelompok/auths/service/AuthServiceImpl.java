@@ -17,9 +17,4 @@ public class AuthServiceImpl implements AuthService{
         }
         return false;
     }
-
-    @Override
-    public boolean bindMethod(Account account, String strategy, Map<String, Object> requestBody) {
-        return false;
-    }
 }
