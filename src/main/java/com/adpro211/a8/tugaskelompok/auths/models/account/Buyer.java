@@ -23,8 +23,4 @@ public class Buyer extends Account {
 
     private String alamat;
 
-    @OneToMany(mappedBy = "orderBuyer")
-    @JsonIgnore
-    private List<Order> orderList;
-
 }

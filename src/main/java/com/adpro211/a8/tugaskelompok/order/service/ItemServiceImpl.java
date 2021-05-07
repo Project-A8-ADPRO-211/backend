@@ -23,10 +23,9 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     ProductService productService;
 
-    public Item createItem(String name, int quantity, int orderId, int productId) {
+    public Item createItem(String name, int quantity, int orderId, Product product) {
 
         Item item = new Item();
-        Product product = productService.getProductById(productId);
         Order order = orderRepository.findOrderById(orderId);
 
         item.setItemName(name);

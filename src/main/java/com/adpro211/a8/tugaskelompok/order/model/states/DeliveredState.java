@@ -4,17 +4,22 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class DeliveredState implements OrderState {
     Order order;
+    int statusInt;
 
     public DeliveredState(Order order) {
         this.order = order;
+        this.statusInt = 3;
+    }
+
+    @Override
+    public int getStatusInt() {
+        return this.statusInt;
     }
 
     @Override
     public String getStateDescription() {
         return "Delivered";
     }
-
-    // public OrderState addItem(List<Item> items);
 
     @Override
     public OrderState confirmOrder() {

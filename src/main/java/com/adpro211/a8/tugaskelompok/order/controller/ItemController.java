@@ -5,6 +5,7 @@ import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.service.ItemService;
 import com.adpro211.a8.tugaskelompok.order.service.OrderService;
+import com.adpro211.a8.tugaskelompok.product.model.Product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,11 @@ public class ItemController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping(path = "{accountId}/{id}", produces = { "application/json" })
+    @PostMapping(path = "{orderId}/create", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity postItem(@PathVariable(name = "accountId") int accountId, @PathVariable(name = "id") int id,
-            @RequestBody Item item) {
-        return ResponseEntity.ok(itemService.createItem(item.getItemName(), item.getItemQuantity(), id, accountId));
+    public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
+            @RequestBody Product product) {
+        return ResponseEntity.ok(itemService.createItem(item.getItemName(), item.getItemQuantity(), id, product));
     }
 
     @GetMapping(path = "/{id}", produces = { "application/json" })
@@ -36,9 +37,9 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(id));
     }
 
-    @GetMapping(path = "/by-order", produces = { "application/json" })
+    @GetMapping(path = "/by-order/{orderId}", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity<Iterable<Item>> getItemsByOrderId(@RequestBody Order order) {
-        return ResponseEntity.ok(itemService.getItemsByOrderId(order.getId()));
+    public ResponseEntity<Iterable<Item>> getItemsByOrderId(@PathVariable(name = "orderId") id) {
+        return ResponseEntity.ok(itemService.getItemsByOrderId(id));
     }
 }

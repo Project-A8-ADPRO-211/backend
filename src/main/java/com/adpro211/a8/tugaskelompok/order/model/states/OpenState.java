@@ -7,9 +7,16 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 public class OpenState implements OrderState {
 
     Order order;
+    int statusInt;
 
     public OpenState(Order order) {
         this.order = order;
+        this.statusInt = 0;
+    }
+
+    @Override
+    public int getStatusInt() {
+        return this.statusInt;
     }
 
     @Override

@@ -19,7 +19,4 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 public class Seller extends Account {
 
-    @OneToMany(mappedBy = "orderSeller")
-    @JsonIgnore
-    private List<Order> orderList;
 }
