@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.auths.models.account;
 
 import com.adpro211.a8.tugaskelompok.auths.models.authStrategy.AuthStrategy;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
+import com.adpro211.a8.tugaskelompok.product.model.Review;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -39,6 +40,10 @@ public abstract class Account {
     @OneToMany(mappedBy = "ownerAccount")
     @JsonIgnore
     private List<Product> productList;
+
+    @OneToMany(mappedBy = "reviewer")
+    @JsonIgnore
+    private List<Review> reviewList;
 
     @Column(name="account_type", nullable=false, insertable = false, updatable = false)
     private String accountType;
