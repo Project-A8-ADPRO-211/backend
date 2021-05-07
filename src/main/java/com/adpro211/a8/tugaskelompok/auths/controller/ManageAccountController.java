@@ -5,9 +5,7 @@ import com.adpro211.a8.tugaskelompok.auths.annotation.RequireLoggedIn;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/account")
 public class ManageAccountController
 {
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Getter
+    @Setter
     static class PasswordReset {
         String newPassword;
     }
@@ -27,22 +24,22 @@ public class ManageAccountController
     @Autowired
     AccountService accountService;
 
-    @GetMapping(produces = {"application/json"}, path = "/")
+    @GetMapping(produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<Account> getBaseAccount(@RequireLoggedIn Account account) {
         return ResponseEntity.ok(account);
     }
 
-    @PutMapping(path = "/", produces = {"application/json"})
+    @PutMapping(produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
+    public ResponseEntity<Account> updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
         currentAcc.setName(inputAcc.getName());
         return ResponseEntity.ok(accountService.updateAccount(currentAcc.getId(), currentAcc));
     }
 
     @PutMapping(path = "/updateBuyer", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateBuyer(@RequestBody Buyer inputAcc, @RequireBuyer Buyer currentAcc) {
+    public ResponseEntity<Buyer> updateBuyer(@RequestBody Buyer inputAcc, @RequireBuyer Buyer currentAcc) {
         currentAcc.setAlamat(inputAcc.getAlamat());
         currentAcc.setName(inputAcc.getName());
         return ResponseEntity.ok(accountService.updateBuyer(currentAcc));
@@ -50,7 +47,7 @@ public class ManageAccountController
 
     @PostMapping(path = "/updatePass", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateBuyer(@RequestBody PasswordReset newPass, @RequireLoggedIn Account currentAcc) {
+    public ResponseEntity<Account> updatePass(@RequestBody PasswordReset newPass, @RequireLoggedIn Account currentAcc) {
         return ResponseEntity.ok(accountService.updateAccountPass(currentAcc, newPass.newPassword));
     }
 

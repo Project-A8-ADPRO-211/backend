@@ -2,7 +2,9 @@ package com.adpro211.a8.tugaskelompok.auths.models.authStrategy;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -10,7 +12,6 @@ import javax.persistence.InheritanceType;
 import java.util.Map;
 
 @Entity
-@Data
 @NoArgsConstructor
 public class PasswordStrategy extends AuthStrategy {
 

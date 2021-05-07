@@ -2,7 +2,6 @@ package com.adpro211.a8.tugaskelompok.auths.controller;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,12 +26,14 @@ public class SignupController {
         private String type;
     }
 
-//    @Data
-//    @NoArgsConstructor
-//    private static class SsoSignup {
-//        private String ticket;
-//        private String name;
-//    }
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class UserSignUpGoogle {
+        private String token;
+        private String accType;
+    }
+
 
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
     @ResponseBody
@@ -40,9 +41,10 @@ public class SignupController {
         return ResponseEntity.ok(accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type));
     }
 
-//    @PostMapping(produces = {"application/json"}, consumes = {"application/json"}, path = "/sso")
-//    @ResponseBody
-//    public ResponseEntity<Account> signUpSSO(@RequestBody UserSignUp signUpData) {
-//        return ResponseEntity.ok(accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type));
-//    }
+
+    @PostMapping(produces = {"application/json"}, consumes = {"application/json"}, path = "/oauth")
+    @ResponseBody
+    public ResponseEntity<Account> signUpGoogle(@RequestBody UserSignUpGoogle signUpData) {
+        return ResponseEntity.ok(accountService.createNewAccountGoogle(signUpData.token, signUpData.accType));
+    }
 }

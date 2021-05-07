@@ -2,9 +2,6 @@ sudo: required
 language: java
 jdk: oraclejdk11
 
-services:
-  - docker
-
 env:
   global:
     - secure: "FIGkQ4SlNWDpgNcZyGEnN1VY654BpQIZXekLTDTKm/ce9N6uTY/RU8gAF+OcY53ps4cMNgS10IjoiPgRZzJdaAzvYrcJExIOSpuUBKV2Ye3Ue3Xxkb4AJyv73u2Sc8n3jAxgfIxcpCuf5DZp5xvQdAjAoqhbgYxvXWPZTsK0420MxsJMf29RId4TwN/7FaGGMZQt8wqmuc3X4xsxd3xCKlakWhozsan2ybixTnpBh48BSdZhFeRCgp33rxUB
@@ -13,20 +10,21 @@ env:
     - secure: "hUhIhbV13ADDGosQHBMRxg8DxGuAF3qiNT3FMfYDpD9w98YiP42juo1rGOBPnUtNo/ldoRfR2nZf1DgRgsbg+MsGYPBnjlYicAzO+FSe4EOstz83T18MhfbCZljIFT4taMPiuKu7rPq23ry01oHr9m9JrnMcNYdOefT+GQ1LXzWKCf3SJN9c9RTIGIU3Mw8Zlu8k6zTCGMEVivGWawKk2IFypgAtAJuBhb9viG3E1ZTITg3re5/R9rtSuuG/
       6QWjfSbOmW4cEyfn/yEYF9rzmTc/yQvdNgs70jbmDRYJ8knhqYeWvLOulRYU3g+4EQ500T2pLSXcPvGk3pP7bSWgp4RiDP4Z97SHfP9ZoAiQDZQH8WKNWCSe/8Gc7I9evHxl7DxmyzBfn9/icfIp/CeHAEgxKnyg9Bn7AoYBedtOpWuBCZm0I9MMQJ0DL8RbVqmQ/jkO2SSaIq02xQaZ75FihM/LPjQ3T94zsEpRt50a0iSuCBL+HO8b+h0Kb5DuuAKwaen
       K2tYzKprS6ZaY7PNN6+3zWIYpPFkz5dp62szBys5McXYJMvyC7z7z7o9iL8QIGzD85LLKF9XCHj+H85AassUPMTgmR8Hz3QnpsP4vTBxwVniVXuqBlZ6RKxO5tdVXQJZVssSfdhvHJcpoBvPLQHqBJYZ3ZR+kfvcnuTNODH4="
+    - secure: "o210F5ObmWmSS5/yg5d2wSpcwcEiIGpuV+P2yQMmC6W+MboQqXNb8ohEf/KwxRjO9rubkiMj2TAV3rGxLlTZTJ/a5Yc4gGJfefe5Af+WC3BI771jrdH/5earmEcDrp6SXye+swxmiKW1XWS6kdPzWhs+SPSitzlk8ODWJTljdqYOqCwkvYO+fEHA0eU9QIpLuFcif3l3m01l0EvbWh33BaJhOYT8K4GP3th5WR0YRdtNADSuOS0DwKEbyioYF6O
+      oqM33RSJ7x14jRIan69En0fKK8gotd5+O6emj/AR8G1GW1Ig8mqb517/dfrYD2ibWYgpGkSS7BjyNZe47iWAz8HqjZS5d0VHS2LSsLIH9qLAex4tpReM9EVAU1+9hS/j4+bLdnsLr0OV9Yln/9Ak+2lTqdCnyWgiBa7daPDS1uBqrMCkAqYnEBafvAoYluJh2mSrKIkkpJagcI48Oruwc77OTvuwkkQ6aRm25zF2fwa6D1iOy4pnwri1GYTFW51rZPKPqfLZJT
+      ZAVmjoLpnvXNc/cCYqUvIjR3ugJXw9v6l8bW+kTAAW+usttiKBc1mcijGDkYm1SwXWAqWC76Q0FY4wnV0dx/ZB0SxLqun3PLBEANQCMzSQpuE5m8+r0n4YLI56y/HRQESIxVcbszy0pqxRrCyr9QA5JZbgqTLr2kkA="
+    - secure: "c/Gs0MsLToQGVmGMX2MrgaJWdBCMqoKLG1JiBeW0VxwKWCs2Cl86UslgPasruuck43YnK+atpJ76GMmnpHWJxgX+CQrJS84jgh8DKd8nrLvykwEsqafUvizA6HLU6AyPdlG82bvn2lBGOh78PmQdBmc7ppGjYGC52NY8aHy+0GIOO564JxhctXoDZlGWutuM90BE1/kC6R4Sxwjp6XUQ6jFhrMd6OzNPzkjR/6oj/cy4KqFpmlsx7boU0P92
+     +KtmuscaFJDatSMu8N5bEF+8kNRK8qFU2nyjrvw2eKh2QUx52UTyCJ4zVadlyWOL1EVU7KNVWng2wkhy/u5hJ/IDS2/W8CGxtGTVnOlB/cgxAZecPyeZJZ7/lUDhPJZk2LBX8LbE/kn7/LNKUB8zZoXMeFXvTiWXK71JkwY7deq84qpfEpoXorc5dhOYU84VMqf2PVhROxKSS7TWrF/chaT61bO/ecxMchavD5bwEyXXDpB+n24ZfYhII/AQ4fVOEHJgVM9
+     nSqcl+WPvisqV8YJ4M0q6vGey/qzSnmiPQ03jJbJ1qDLMx8OXfNB19J4VH0zDOT+8LEKNdOmfTAoyynKGsMtS/hlG6wD85Ifvi1dVDYhjBNaIlksx9zu/N8pGIMCieoGIm9ry6FGkMnr5qz+ZQf2SGMT67Bh/Dv23gq6N0rc="
+    - secure: "RJ7ZR1SpQe00HBKryz2NG8iayVRtGFzVO8WfIme6U+/EAh0LQyg1ry2bj6wrNqiRTSe1guhtFGiLBkCo4lQVIQPnIgyWWGBU2Z2OBnZXh0aOYQFQtKQMmDsrkVufhJVm14Nr+9rDxi7rCak9WD//RNyxk63Y1sVp2ABPTXO5J9H9K9SYvWS/i54xBBmwBQ3M+105f0SJC5EdjnvyHwIUoxn19SP9bA8ouKu7RWwqoh7jhxb+3Cet4nSbXlir
+      rdeK21DeodG0RrnEoMwXZOjE+qJckyXSmJwNgsjcZ4DBUCSVN03l1N9VbWi9T9XT+Q0i8vCUh20ShodKdjth1IypQ/7O7P//R4sIcggPurhNKtm9ByDnzDtZ5+nS8g3aX49adMLBgnxwmeDK/yh4x6Dsy5YmN5ped4PecFhrkKNQ5mPgVp3WCPRmSwgfc6QsnFNkx9poCv+8qZK1L7YdedCuIg+jlsec02q0JoeDjL/qtdoIgB//5uy/VpAVRQLfI9P5ROn
+      X1LKQAtxqsvpRn5EK0MX1gUdCTKf/MlciqlpmNuPJ4Tf3Ei6ApEFU7wtv96FHk8MSh7408WhjiCbFZ3eQhhrtDAg4POVJZXUEwbM7cEF103wgTO6zGxXo6xC1YboWPRrgqhdQEPAicmOOLBDODnK40ejMDqgTzW8PExESn1c="
+    - secure: "KfJgyhl/yZqyWwokZ8JKt0Rds8MDka28JFgj+ZKmPLuyoTgXJPyIoti2mb81A53sF99qZSOyeOibkTGb5YbdapprdrViefiY7J8dqATfe8dJYepm2NEzQQB0XsX8vA6EdXvmLh20hEysIHzVTnr/dCmV1OZqXvWNWV3GE3lNitkKUC17WANSS71H1WnluqkfIi6xSh3LrJD3yN7fzB7eW2JRNVSZ5EaSE5Snpni6K93+KjgpIj9IYdeVNP8D
+      8dXV8RVsAOKXbLWzVxE9LFAUrAhypV9NlOhBuW5Z/3ISl8Im2VHmKQmdsh0k3dHZBU9gwggtSpFWepbO8XbeWeWZQHen8NTmTTn9Xjcx1eDig0w4fFkKpzW9NMaRBoJHxGKz/6EqPu5xmcsN/y5m8FistTgjvJaQrbRDok//i+pd6f4T2ciFjNJx113UvIFGGpx9DnyJIOEGNC+S1daXf/WUyTbLg9eIZ1Zjgv0hR4AO/D5qaPU+zE2MguOxBqT6qqOcZJx
+      YYJP2Q3/Dn9IEUiIaastl0fTzuwDHbgAc3T6F2nbrfNrs0VejKjle0ZCcTgbT8vRtvUd6y7cYHXVCViAklge/FO3B0AX1JHzRFd8SNC77wi5QsU4UBhDp9F9rLGMtBYkZJUXOKVAQw4i1rBRqmBtgDFrxlAIQYfRtdbGXXn8="
     - COMMIT=${TRAVIS_COMMIT::7}
 
 
 script:
   - ./gradlew clean build
   - bash <(curl -s https://codecov.io/bash)
-
-after_success:
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
-  - export IMAGE_NAME=adproa8211/tk
-  - docker build --build-arg JAR_FILE=build/libs/\*.jar -t $IMAGE_NAME:$COMMIT .
-  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
-
-deploy:
-  provider: heroku
-  api_key: $HEROKU_API_KEY
-  app: adpro-tk-a8
