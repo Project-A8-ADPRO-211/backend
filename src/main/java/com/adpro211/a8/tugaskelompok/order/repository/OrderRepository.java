@@ -15,5 +15,4 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     Iterable<Order> findAllBySeller(Seller seller);
 
-    Iterable<Order> findAllByNameLike(String name);
 }

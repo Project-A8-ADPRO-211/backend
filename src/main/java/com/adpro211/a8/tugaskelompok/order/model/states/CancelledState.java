@@ -4,16 +4,10 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class CancelledState implements OrderState {
     Order order;
-    int statusInt;
 
     public CancelledState(Order order) {
         this.order = order;
-        this.statusInt = 4;
-    }
-
-    @Override
-    public int getStatusInt() {
-        return this.statusInt;
+        this.order.setStatusInt(4);
     }
 
     @Override

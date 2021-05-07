@@ -4,16 +4,10 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class ShipState implements OrderState {
     Order order;
-    int statusInt;
 
     public ShipState(Order order) {
         this.order = order;
-        this.statusInt = 2;
-    }
-
-    @Override
-    public int getStatusInt() {
-        return this.statusInt;
+        this.order.setStatusInt(2);
     }
 
     @Override

@@ -5,16 +5,10 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 public class ConfirmedState implements OrderState {
 
     Order order;
-    int statusInt;
 
     public ConfirmedState(Order order) {
         this.order = order;
-        this.statusInt = 1;
-    }
-
-    @Override
-    public int getStatusInt() {
-        return this.statusInt;
+        this.order.setStatusInt(1);
     }
 
     @Override

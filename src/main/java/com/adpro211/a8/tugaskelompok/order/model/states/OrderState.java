@@ -2,8 +2,6 @@ package com.adpro211.a8.tugaskelompok.order.model.states;
 
 public interface OrderState {
 
-    public int getStatusInt();
-
     public String getStateDescription();
 
     public OrderState confirmOrder();

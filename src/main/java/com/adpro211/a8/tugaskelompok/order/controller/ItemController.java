@@ -40,6 +40,6 @@ public class ItemController {
     @GetMapping(path = "/by-order/{orderId}", produces = { "application/json" })
     @ResponseBody
     public ResponseEntity<Iterable<Item>> getItemsByOrderId(@PathVariable(name = "orderId") id) {
-        return ResponseEntity.ok(itemService.getItemsByOrderId(id));
+        return ResponseEntity<Iterable<Item>>.ok(itemService.getItemById(id));
     }
 }
