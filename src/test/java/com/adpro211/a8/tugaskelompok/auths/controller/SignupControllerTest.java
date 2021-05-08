@@ -55,6 +55,7 @@ class SignupControllerTest {
     private SellerRepository sellerRepository;
 
     private SignupController.UserSignUp signup = new SignupController.UserSignUp();
+    private SignupController.UserSignUpGoogle signUpGoogle = new SignupController.UserSignUpGoogle();
     private Account account;
     private PasswordStrategy passwordStrategy;
 
@@ -76,6 +77,9 @@ class SignupControllerTest {
         signup.setName("ssss");
         signup.setPassword("dddd");
         signup.setType("ssss");
+
+        signUpGoogle.setAccType("admin");
+        signUpGoogle.setToken("abcd");
     }
 
     @Test
@@ -83,6 +87,14 @@ class SignupControllerTest {
         when(accountService.createNewAccount(any(), any(), any(), any())).thenReturn(this.account);
 
         mvc.perform(post("/signup").contentType(MediaType.APPLICATION_JSON_VALUE).content(
+                mapToJson(signup))).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerSignUpGoogleSuccess() throws Exception {
+        when(accountService.createNewAccountGoogle(any(), any())).thenReturn(this.account);
+
+        mvc.perform(post("/signup/oauth").contentType(MediaType.APPLICATION_JSON_VALUE).content(
                 mapToJson(signup))).andExpect(status().is2xxSuccessful());
     }
 
