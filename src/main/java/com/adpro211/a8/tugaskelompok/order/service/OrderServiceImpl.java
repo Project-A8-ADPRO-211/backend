@@ -7,6 +7,7 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
+import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.repository.ItemRepository;
 import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
@@ -15,6 +16,8 @@ import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -38,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(0);
         order.setPaymentReceived(paymentReceived);
         order.setCurrentState(new OpenState(order));
+
+        List<Item> itemList = new ArrayList<Item>();
+        order.setItems(itemList);
 
         try {
             orderRepository.save(order);
@@ -89,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
             buyerWallet.setBalance(buyerWallet.getBalance() - price);
             sellerWallet.setBalance(sellerWallet.getBalance() + price);
         } else
-            throw new IllegalStateException("the buyer or the seller doesn't exist");
+            System.out.println("The buyer or the seller doesn't exist");
 
         try {
             order.orderPayed();
