@@ -28,7 +28,7 @@ public class ItemController {
     @ResponseBody
     public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
             @RequestBody Product product) {
-        return ResponseEntity.ok(itemService.createItem(item.getItemName(), item.getItemQuantity(), id, product));
+        return ResponseEntity.ok(itemService.createItem(item.getName(), item.getQuantity(), id, product));
     }
 
     @GetMapping(path = "/{id}", produces = { "application/json" })

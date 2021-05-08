@@ -31,7 +31,7 @@ public class OrderController {
     @PostMapping(path = "/checkout", produces = { "application/json" })
     @ResponseBody
     public ResponseEntity postOrder(@RequireBuyer Buyer buyer, @RequestBody Order order) {
-        return ResponseEntity.ok(orderService.createOrder(false, buyer.getId(), order.getOrderSeller().getId()));
+        return ResponseEntity.ok(orderService.createOrder(false, buyer.getId(), order.getSeller().getId()));
     }
 
     @GetMapping(path = "/{id}", produces = { "application/json" })

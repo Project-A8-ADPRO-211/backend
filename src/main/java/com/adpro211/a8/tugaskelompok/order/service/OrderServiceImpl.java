@@ -31,8 +31,8 @@ public class OrderServiceImpl implements OrderService {
         Buyer buyer = (Buyer) accountService.getAccountById(buyerId);
         Seller seller = (Seller) accountService.getAccountById(sellerId);
 
-        order.setOrderBuyer(buyer);
-        order.setOrderSeller(seller);
+        order.setBuyer(buyer);
+        order.setSeller(seller);
         order.setPaymentReceived(paymentReceived);
         order.setCurrentState(new OpenState(order));
 
