@@ -54,6 +54,9 @@ public class ItemTest {
         item.setOrder(order);
         item.setProduct(product);
         item.setProductOwner(product.getOwnerAccount());
+        item.setPrice(product.getPrice() * item.getQuantity());
+
+        order.getItems().add(item);
     }
 
     @Test
@@ -84,6 +87,11 @@ public class ItemTest {
     @Test
     void testGetProductOwner() {
         assertEquals(this.seller, item.getProductOwner());
+    }
+
+    @Test
+    void testGetPrice() {
+        assertEquals(5000, item.getPrice());
     }
 
     @Test

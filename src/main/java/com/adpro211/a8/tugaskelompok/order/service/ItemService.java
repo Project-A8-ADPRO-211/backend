@@ -10,4 +10,6 @@ public interface ItemService {
 
     Iterable<Item> getItemsByOrderId(int orderId);
 
+    boolean checkStock(int quantity, Product product);
+
 }

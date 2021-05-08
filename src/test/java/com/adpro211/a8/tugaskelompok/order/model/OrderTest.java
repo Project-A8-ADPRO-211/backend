@@ -50,16 +50,19 @@ public class OrderTest {
         item.setOrder(order);
         item.setProduct(product);
         item.setProductOwner(product.getOwnerAccount());
+        item.setPrice(product.getPrice() * item.getQuantity());
 
         order = new Order();
         order.setId(4);
         order.setPaymentReceived(false);
         order.setBuyer(buyer);
         order.setSeller(seller);
+        order.setTotalPrice(0);
 
         List<Item> itemList = new ArrayList<Item>();
         itemList.add(item);
         order.setItems(itemList);
+        order.setTotalPrice(order.getTotalPrice() + item.getPrice());
     }
 
     @Test
@@ -93,8 +96,13 @@ public class OrderTest {
     }
 
     @Test
-    void testGetStatusInt(){
+    void testGetStatusInt() {
         assertEquals(0, order.getStatusInt());
+    }
+
+    @Test
+    void testGetTotalPrice() {
+        assertEquals(5000, order.getTotalPrice());
     }
 
     @Test

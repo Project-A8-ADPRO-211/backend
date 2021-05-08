@@ -10,6 +10,7 @@ import com.adpro211.a8.tugaskelompok.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 @RequestMapping("/item")
 @RestController
@@ -28,7 +29,13 @@ public class ItemController {
     @ResponseBody
     public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
             @RequestBody Product product) {
-        return ResponseEntity.ok(itemService.createItem(item.getName(), item.getQuantity(), id, product));
+
+        try {
+            itemService.checkStock(item.getQuantity(), product);
+            return ResponseEntity.ok(itemService.createItem(item.getName(), item.getQuantity(), id, product));
+        } catch (IllegalStateException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/{id}", produces = { "application/json" })

@@ -31,10 +31,10 @@ public class ItemServiceImpl implements ItemService {
         Order order = orderRepository.findOrderById(orderId);
 
         item.setName(name);
-        item.setQuantity(quantity);
         item.setProduct(product);
         item.setProductOwner(product.getOwnerAccount());
         item.setOrder(order);
+        item.setQuantity(quantity);
         item.setPrice(product.getPrice() * item.getQuantity());
 
         try {
@@ -47,6 +47,19 @@ public class ItemServiceImpl implements ItemService {
         order.setTotalPrice(order.getTotalPrice() + item.getPrice());
 
         return item;
+    }
+
+    public boolean checkStock(int quantity, Product product) {
+        Item item = new Item();
+
+        item.setProduct(product);
+        item.setQuantity(quantity);
+
+        if (item.getQuantity() > item.getProduct().getStock())
+            throw new IllegalStateException("This product is out of stock");
+
+        return true;
+
     }
 
     public Item getItemById(int id) {
