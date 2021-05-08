@@ -23,7 +23,7 @@ public class WalletController {
         return ResponseEntity.ok(walletService.createWallet(idAccount));
     }
 
-    @PostMapping(path = "/topup", produces = {"applicaiton/json"})
+    @PostMapping(path = "/topup", produces = {"application/json"})
     @ResponseBody
     public ResponseEntity topupWallet(@RequestParam String strategy, @RequestBody Map<String, Object> request) {
         if (!request.containsKey("idWallet")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
