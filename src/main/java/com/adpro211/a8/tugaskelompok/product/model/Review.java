@@ -2,13 +2,16 @@ package com.adpro211.a8.tugaskelompok.product.model;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "review")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class Review {
 

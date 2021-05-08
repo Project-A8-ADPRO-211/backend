@@ -3,14 +3,17 @@ package com.adpro211.a8.tugaskelompok.product.model;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "product")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class Product {
 
