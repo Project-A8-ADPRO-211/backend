@@ -53,7 +53,7 @@ public class ItemTest {
         item.setQuantity(5);
         item.setOrder(order);
         item.setProduct(product);
-        item.setProductOwner(seller);
+        item.setProductOwner(product.getOwnerAccount());
     }
 
     @Test
@@ -63,7 +63,44 @@ public class ItemTest {
 
     @Test
     void testGetName() {
-        assertEquals("mie", item.getId());
+        assertEquals("mie", item.getName());
     }
 
+    @Test
+    void testGetQuantity() {
+        assertEquals(5, item.getQuantity());
+    }
+
+    @Test
+    void testGetOrder() {
+        assertEquals(this.order, item.getOrder());
+    }
+
+    @Test
+    void testGetProduct() {
+        assertEquals(this.product, item.getProduct());
+    }
+
+    @Test
+    void testGetProductOwner() {
+        assertEquals(this.seller, item.getProductOwner());
+    }
+
+    @Test
+    void testEquals() {
+        Item baruw = new Item();
+        assertTrue(baruw.equals(baruw));
+    }
+
+    @Test
+    void testNotNull() {
+        Item baruw = new Item();
+        assertFalse(baruw.equals(null));
+    }
+
+    @Test
+    void testNotSame() {
+        Item baruw = new Item();
+        assertFalse(baruw.equals(item));
+    }
 }
