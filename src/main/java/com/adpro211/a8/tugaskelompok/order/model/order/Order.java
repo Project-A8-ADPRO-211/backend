@@ -3,12 +3,8 @@ package com.adpro211.a8.tugaskelompok.order.model.order;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
-import com.adpro211.a8.tugaskelompok.order.model.states.CancelledState;
-import com.adpro211.a8.tugaskelompok.order.model.states.ConfirmedState;
-import com.adpro211.a8.tugaskelompok.order.model.states.DeliveredState;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.model.states.OrderState;
-import com.adpro211.a8.tugaskelompok.order.model.states.ShipState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Data;
@@ -16,7 +12,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user_order")
+@Table(name = "order_queue")
 @Data
 public class Order {
 
