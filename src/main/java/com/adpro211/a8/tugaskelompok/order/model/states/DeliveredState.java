@@ -16,24 +16,24 @@ public class DeliveredState implements OrderState {
     }
 
     @Override
-    public OrderState confirmOrder() {
+    public void confirmOrder() {
         throw new IllegalStateException("The order is already confirmed");
     }
 
     @Override
-    public OrderState cancelOrder() {
+    public void cancelOrder() {
         throw new IllegalStateException(
                 "Can't cancel an order when the order is in " + getStateDescription() + " state.");
     }
 
     @Override
-    public OrderState shipOrder() {
+    public void shipOrder() {
         throw new IllegalStateException(
                 "Can't ship an order when the order is in " + getStateDescription() + " state.");
     }
 
     @Override
-    public OrderState orderDelivered() {
+    public void orderDelivered() {
 
         throw new IllegalStateException("The order is already delivered.");
     }

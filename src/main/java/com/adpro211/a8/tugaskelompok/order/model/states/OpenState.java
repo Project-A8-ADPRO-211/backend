@@ -17,23 +17,23 @@ public class OpenState implements OrderState {
     }
 
     @Override
-    public OrderState confirmOrder() {
-        return new ConfirmedState(order);
+    public void confirmOrder() {
+        this.order.setCurrentState(new ConfirmedState(this.order));
     }
 
     @Override
-    public OrderState cancelOrder() {
-        return new CancelledState(order);
+    public void cancelOrder() {
+        this.order.setCurrentState(new CancelledState(this.order));
     }
 
     @Override
-    public OrderState shipOrder() {
+    public void shipOrder() {
         throw new IllegalStateException(
                 "Can't ship an order when the order is in " + getStateDescription() + " state.");
     }
 
     @Override
-    public OrderState orderDelivered() {
+    public void orderDelivered() {
         throw new IllegalStateException(
                 "Can't deliver an order when the order is in " + getStateDescription() + " state.");
     }

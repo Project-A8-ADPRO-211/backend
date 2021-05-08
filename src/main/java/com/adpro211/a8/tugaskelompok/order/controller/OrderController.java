@@ -61,4 +61,39 @@ public class OrderController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping(path = "/{orderId}/confirm", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity confirmOrder(@PathVariable(name = "orderId") int orderId) {
+        Order toConfirm = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderService.confirmOrder(toConfirm));
+    }
+
+    @PutMapping(path = "/{orderId}/ship", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity shipOrder(@PathVariable(name = "orderId") int orderId) {
+        Order toShip = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderService.shipOrder(toShip));
+    }
+
+    @PutMapping(path = "/{orderId}/pay", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity payOrder(@PathVariable(name = "orderId") int orderId) { // need to be integrated with E-Wallet
+        Order toPay = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderService.payOrder(toPay));
+    }
+
+    @PutMapping(path = "/{orderId}/deliver", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity deliverOrder(@PathVariable(name = "orderId") int orderId) {
+        Order toDeliver = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderService.deliverOrder(toDeliver));
+    }
+
+    @PutMapping(path = "/{orderId}/cancel", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity cancelOrder(@PathVariable(name = "orderId") int orderId) {
+        Order toCancel = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderService.cancelOrder(toCancel));
+    }
 }

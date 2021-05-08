@@ -15,27 +15,25 @@ public class ShipState implements OrderState {
         return "Ship";
     }
 
-    // public OrderState addItem(List<Item> items);
-
     @Override
-    public OrderState confirmOrder() {
+    public void confirmOrder() {
         throw new IllegalStateException("The order is already confirmed");
     }
 
     @Override
-    public OrderState cancelOrder() {
+    public void cancelOrder() {
         throw new IllegalStateException(
                 "Can't cancel an order when the order is in " + getStateDescription() + " state.");
     }
 
     @Override
-    public OrderState shipOrder() {
+    public void shipOrder() {
         throw new IllegalStateException("The order is already shipped");
     }
 
     @Override
-    public OrderState orderDelivered() {
-        return new DeliveredState(order);
+    public void orderDelivered() {
+        this.order.setCurrentState(new DeliveredState(this.order));
     }
 
     @Override

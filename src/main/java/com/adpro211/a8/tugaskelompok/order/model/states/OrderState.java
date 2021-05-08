@@ -4,13 +4,13 @@ public interface OrderState {
 
     public String getStateDescription();
 
-    public OrderState confirmOrder();
+    public void confirmOrder();
 
-    public OrderState cancelOrder();
+    public void cancelOrder();
 
-    public OrderState shipOrder();
+    public void shipOrder();
 
-    public OrderState orderDelivered();
+    public void orderDelivered();
 
     public boolean isFinished();
 }

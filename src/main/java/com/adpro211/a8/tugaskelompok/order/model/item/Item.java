@@ -15,22 +15,22 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "items_id", updatable = false, nullable = false)
-    private int items_id;
+    @Column(name = "item_id")
+    private int id;
 
-    @Column
-    private String itemName;
+    @Column(name = "item_name")
+    private String name;
 
-    @Column
-    private int itemQuantity;
+    @Column(name = "quantity")
+    private int quantity;
 
     @OneToOne
-    private Product associatedProduct;
+    private Product product;
 
     @OneToOne
     private Account productOwner;
 
     @ManyToOne
-    private Order listedInOrder;
+    private Order order;
 
 }

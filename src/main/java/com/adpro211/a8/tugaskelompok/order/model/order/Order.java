@@ -36,23 +36,23 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "order_id", updatable = false, nullable = false)
-    private int Id;
+    @Column(name = "id")
+    private int id;
 
-    @OneToMany(mappedBy = "listedInOrder")
+    @OneToMany(mappedBy = "order")
     @JsonIgnore
-    private List<Item> itemList;
+    private List<Item> items;
 
-    @Column
+    @Column(name = "payment_received")
     private boolean paymentReceived;
 
     @ManyToOne
-    private Buyer orderBuyer;
+    private Buyer buyer;
 
     @ManyToOne
-    private Seller orderSeller;
+    private Seller seller;
 
-    @Column
+    @Column(name = "status_int")
     private int statusInt;
 
     public Order() {
@@ -61,6 +61,7 @@ public class Order {
         shipState = new ShipState(this);
         deliveredState = new DeliveredState(this);
         cancelledState = new CancelledState(this);
+        setCurrentState(openState);
     }
 
     public String getStateDescription() {
@@ -68,11 +69,11 @@ public class Order {
     }
 
     public void confirmOrder() {
-        currentState = currentState.confirmOrder();
+        currentState.confirmOrder();
     }
 
     public void cancelOrder() {
-        currentState = currentState.cancelOrder();
+        currentState.cancelOrder();
     }
 
     public void orderPayed() {
@@ -80,11 +81,11 @@ public class Order {
     }
 
     public void shipOrder() {
-        currentState = currentState.shipOrder();
+        currentState.shipOrder();
     }
 
     public void orderDelivered() {
-        currentState = currentState.orderDelivered();
+        currentState.orderDelivered();
     }
 
     public boolean isFinished() {
