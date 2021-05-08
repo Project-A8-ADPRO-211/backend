@@ -31,9 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ManageAccountController.class)
 class ManageAccountControllerTest {
 
-    private ObjectMapper objectMapper;
-    private ManageAccountController manageAccountController;
-
     @Autowired
     private MockMvc mvc;
 
@@ -63,9 +60,6 @@ class ManageAccountControllerTest {
     @Mock
     private Account account2;
 
-    private AdminAccountFromTokenResolver adminAccountFromTokenResolver;
-    private BaseAccountFromTokenResolver baseAccountFromTokenResolver;
-
     private String mapToJson(Object obj) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(obj);
@@ -73,8 +67,6 @@ class ManageAccountControllerTest {
 
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper();
-        manageAccountController = new ManageAccountController();
 
         account1 = new Buyer();
         account1.setName("Test1");
