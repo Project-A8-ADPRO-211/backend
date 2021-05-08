@@ -30,11 +30,11 @@ public class ItemServiceImpl implements ItemService {
         Item item = new Item();
         Order order = orderRepository.findOrderById(orderId);
 
-        item.setItemName(name);
-        item.setItemQuantity(quantity);
-        item.setAssociatedProduct(product);
+        item.setName(name);
+        item.setQuantity(quantity);
+        item.setProduct(product);
         item.setProductOwner(product.getOwnerAccount());
-        item.setListedInOrder(order);
+        item.setOrder(order);
         try {
             itemRepository.save(item);
         } catch (DataIntegrityViolationException e) {
@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public Item getItemById(int id) {
-        return itemRepository.findItembyId(id);
+        return itemRepository.findItemById(id);
     }
 
     public Iterable<Item> getItemsByOrderId(int orderId) {

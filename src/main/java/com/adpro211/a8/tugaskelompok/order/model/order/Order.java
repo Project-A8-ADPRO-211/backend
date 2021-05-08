@@ -21,17 +21,6 @@ import javax.persistence.*;
 public class Order {
 
     @Transient
-    OrderState openState;
-    @Transient
-    OrderState confirmedState;
-    @Transient
-    OrderState shipState;
-    @Transient
-    OrderState deliveredState;
-    @Transient
-    OrderState cancelledState;
-
-    @Transient
     private OrderState currentState;
 
     @Id
@@ -56,12 +45,7 @@ public class Order {
     private int statusInt;
 
     public Order() {
-        openState = new OpenState(this);
-        confirmedState = new ConfirmedState(this);
-        shipState = new ShipState(this);
-        deliveredState = new DeliveredState(this);
-        cancelledState = new CancelledState(this);
-        setCurrentState(openState);
+        setCurrentState(new OpenState(this));
     }
 
     public String getStateDescription() {
