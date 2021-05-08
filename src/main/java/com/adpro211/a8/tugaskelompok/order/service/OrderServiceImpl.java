@@ -10,6 +10,8 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.repository.ItemRepository;
 import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
+import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setBuyer(buyer);
         order.setSeller(seller);
+        order.setTotalPrice(0);
         order.setPaymentReceived(paymentReceived);
         order.setCurrentState(new OpenState(order));
 
@@ -76,6 +79,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Order payOrder(Order order) {
+        Buyer buyer = order.getBuyer();
+        Seller seller = order.getSeller();
+        double price = (double) order.getTotalPrice();
+
+        if (buyer != null || seller != null) {
+            Wallet buyerWallet = buyer.getWallet();
+            Wallet sellerWallet = seller.getWallet();
+            buyerWallet.setBalance(buyerWallet.getBalance() - price);
+            sellerWallet.setBalance(sellerWallet.getBalance() + price);
+        } else
+            throw new IllegalStateException("the buyer or the seller doesn't exist");
+
         try {
             order.orderPayed();
         } catch (IllegalStateException e) {

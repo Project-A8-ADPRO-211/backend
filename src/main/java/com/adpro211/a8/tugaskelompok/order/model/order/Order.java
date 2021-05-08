@@ -28,6 +28,9 @@ public class Order {
     @JsonIgnore
     private List<Item> items;
 
+    @Column(name = "totalPrice")
+    private int totalPrice;
+
     @Column(name = "payment_received")
     private boolean paymentReceived;
 

@@ -24,6 +24,9 @@ public class Item {
     @Column(name = "quantity")
     private int quantity;
 
+    @Column(name = "item_price")
+    private int price;
+
     @OneToOne
     private Product product;
 

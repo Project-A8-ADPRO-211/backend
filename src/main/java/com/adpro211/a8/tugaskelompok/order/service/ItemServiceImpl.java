@@ -35,11 +35,16 @@ public class ItemServiceImpl implements ItemService {
         item.setProduct(product);
         item.setProductOwner(product.getOwnerAccount());
         item.setOrder(order);
+        item.setPrice(product.getPrice() * item.getQuantity());
+
         try {
             itemRepository.save(item);
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This item already exist");
         }
+
+        order.getItems().add(item);
+        order.setTotalPrice(order.getTotalPrice() + item.getPrice());
 
         return item;
     }
