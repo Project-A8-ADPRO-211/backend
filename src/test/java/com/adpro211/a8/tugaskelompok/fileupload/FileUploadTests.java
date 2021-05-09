@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.fileupload;
 
 import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageFileNotFound;
 import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;

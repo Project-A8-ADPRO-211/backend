@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.product.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
+import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageFileNotFound;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.model.Review;
 import com.adpro211.a8.tugaskelompok.product.repository.ProductRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,8 @@ public class ProductServiceImplTest {
 
     @Test
     void testCreateNewReviewSuccess() {
-        productService.createNewReview(2, new Review(), this.buyer);
+        Review toBeDuplicated = new Review();
+        productService.createNewReview(2, toBeDuplicated, this.buyer);
         verify(reviewRepository, times(1)).save(any());
     }
 

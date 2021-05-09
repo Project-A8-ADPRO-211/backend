@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.fileupload.storage;
 
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
@@ -15,6 +16,8 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 /**
  *
@@ -33,6 +36,13 @@ public class SystemStorageServiceImplTests {
     }
 
     @Test
+    public void saveNonExistent() {
+        assertThrows(StorageException.class, () -> {
+            service.store(new MockMultipartFile("foo.txt", (byte[]) null));
+        });
+    }
+
+    @Test
     public void loadNonExistent() {
         assertThat(service.load("foo.txt")).doesNotExist();
     }
@@ -42,6 +52,13 @@ public class SystemStorageServiceImplTests {
         service.store(new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
                 "Hello, World".getBytes()));
         assertThat(service.load("foo.txt")).exists();
+        assertThat(service.loadAsResource("foo.txt")).isNotNull();
+        assertThrows(StorageFileNotFound.class, () -> {
+            service.loadAsResource("bar.txt");
+        });
+        assertThrows(StorageFileNotFound.class, () -> {
+            service.loadAsResource("b////!waa:9817341");
+        });
     }
 
     @Test
