@@ -1,6 +1,8 @@
 package com.adpro211.a8.tugaskelompok.wallet.models;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,6 +25,7 @@ public class Wallet {
 
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"wallet"})
     private Account account;
 
 }

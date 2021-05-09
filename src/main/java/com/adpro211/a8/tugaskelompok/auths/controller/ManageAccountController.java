@@ -32,14 +32,14 @@ public class ManageAccountController
 
     @PutMapping(produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
+    public ResponseEntity<Account> updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
         currentAcc.setName(inputAcc.getName());
         return ResponseEntity.ok(accountService.updateAccount(currentAcc.getId(), currentAcc));
     }
 
     @PutMapping(path = "/updateBuyer", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updateBuyer(@RequestBody Buyer inputAcc, @RequireBuyer Buyer currentAcc) {
+    public ResponseEntity<Buyer> updateBuyer(@RequestBody Buyer inputAcc, @RequireBuyer Buyer currentAcc) {
         currentAcc.setAlamat(inputAcc.getAlamat());
         currentAcc.setName(inputAcc.getName());
         return ResponseEntity.ok(accountService.updateBuyer(currentAcc));
@@ -47,7 +47,7 @@ public class ManageAccountController
 
     @PostMapping(path = "/updatePass", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity updatePass(@RequestBody PasswordReset newPass, @RequireLoggedIn Account currentAcc) {
+    public ResponseEntity<Account> updatePass(@RequestBody PasswordReset newPass, @RequireLoggedIn Account currentAcc) {
         return ResponseEntity.ok(accountService.updateAccountPass(currentAcc, newPass.newPassword));
     }
 
