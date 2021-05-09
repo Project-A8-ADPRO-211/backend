@@ -1,5 +1,7 @@
 package com.adpro211.a8.tugaskelompok.wallet.controller;
 
+import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,17 @@ public class WalletController {
     @Autowired
     WalletService walletService;
 
+    @Autowired
+    AccountService accountService;
+
     @PostMapping(path = "/account/{idAccount}", produces = {"application/json"})
     @ResponseBody
     public ResponseEntity postWallet(@PathVariable(value = "idAccount") int idAccount) {
-        return ResponseEntity.ok(walletService.createWallet(idAccount));
+        Account account = accountService.getAccountById(idAccount);
+
+        if (account == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return ResponseEntity.ok(walletService.createWallet(account));
     }
 
     @PostMapping(path = "/topup", produces = {"application/json"})
