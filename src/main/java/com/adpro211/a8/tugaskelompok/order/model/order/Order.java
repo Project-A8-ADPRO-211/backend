@@ -51,24 +51,8 @@ public class Order {
         return currentState.getStateDescription();
     }
 
-    public void confirmOrder() {
-        currentState.confirmOrder();
-    }
-
-    public void cancelOrder() {
-        currentState.cancelOrder();
-    }
-
     public void orderPayed() {
         setPaymentReceived(true);
-    }
-
-    public void shipOrder() {
-        currentState.shipOrder();
-    }
-
-    public void orderDelivered() {
-        currentState.orderDelivered();
     }
 
     public boolean isFinished() {

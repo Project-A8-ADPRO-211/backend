@@ -63,12 +63,10 @@ public class OrderController {
     public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
             @RequestBody Product product) {
 
-        try {
-            orderService.checkProductStock(item.getQuantity(), product);
+        if (orderService.checkProductStock(item.getQuantity(), product)) {
             return ResponseEntity.ok(orderService.createItem(item.getName(), item.getQuantity(), id, product));
-        } catch (IllegalStateException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/item/{id}", produces = { "application/json" })

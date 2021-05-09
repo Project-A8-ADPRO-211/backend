@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
         item.setQuantity(quantity);
 
         if (item.getQuantity() > item.getProduct().getStock())
-            throw new IllegalStateException("This product is out of stock");
+            return false;
 
         return true;
 
@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order confirmOrder(Order order) {
         try {
-            order.confirmOrder();
+            order.getCurrentState().confirmOrder();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order cancelOrder(Order order) {
         try {
-            order.cancelOrder();
+            order.getCurrentState().cancelOrder();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
@@ -140,13 +140,14 @@ public class OrderServiceImpl implements OrderService {
         Seller seller = order.getSeller();
         double price = (double) order.getTotalPrice();
 
-        if (buyer != null || seller != null) {
+        try {
             Wallet buyerWallet = buyer.getWallet();
             Wallet sellerWallet = seller.getWallet();
             buyerWallet.setBalance(buyerWallet.getBalance() - price);
             sellerWallet.setBalance(sellerWallet.getBalance() + price);
-        } else
+        } catch (NullPointerException e) {
             throw new NullPointerException("This buyer or this seller might not exist");
+        }
 
         try {
             order.orderPayed();
@@ -158,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order shipOrder(Order order) {
         try {
-            order.shipOrder();
+            order.getCurrentState().shipOrder();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
@@ -167,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order deliverOrder(Order order) {
         try {
-            order.orderDelivered();
+            order.getCurrentState().orderDelivered();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
