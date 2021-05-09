@@ -4,6 +4,7 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class ShipState implements OrderState {
     Order order;
+    final String desc = "Ship";
 
     public ShipState(Order order) {
         this.order = order;
@@ -12,7 +13,7 @@ public class ShipState implements OrderState {
 
     @Override
     public String getStateDescription() {
-        return "Ship";
+        return desc;
     }
 
     @Override
@@ -22,8 +23,7 @@ public class ShipState implements OrderState {
 
     @Override
     public void cancelOrder() {
-        throw new IllegalStateException(
-                "Can't cancel an order when the order is in " + getStateDescription() + " state.");
+        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state.");
     }
 
     @Override

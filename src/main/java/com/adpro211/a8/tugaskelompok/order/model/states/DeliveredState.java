@@ -4,6 +4,7 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class DeliveredState implements OrderState {
     Order order;
+    final String desc = "Delivered";
 
     public DeliveredState(Order order) {
         this.order = order;
@@ -12,7 +13,7 @@ public class DeliveredState implements OrderState {
 
     @Override
     public String getStateDescription() {
-        return "Delivered";
+        return desc;
     }
 
     @Override
@@ -22,14 +23,12 @@ public class DeliveredState implements OrderState {
 
     @Override
     public void cancelOrder() {
-        throw new IllegalStateException(
-                "Can't cancel an order when the order is in " + getStateDescription() + " state.");
+        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state.");
     }
 
     @Override
     public void shipOrder() {
-        throw new IllegalStateException(
-                "Can't ship an order when the order is in " + getStateDescription() + " state.");
+        throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state.");
     }
 
     @Override

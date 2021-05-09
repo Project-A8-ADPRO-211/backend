@@ -5,6 +5,7 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 public class ConfirmedState implements OrderState {
 
     Order order;
+    final String desc = "Confirmed";
 
     public ConfirmedState(Order order) {
         this.order = order;
@@ -13,7 +14,7 @@ public class ConfirmedState implements OrderState {
 
     @Override
     public String getStateDescription() {
-        return "Confirmed";
+        return this.desc;
     }
 
     @Override
@@ -36,8 +37,7 @@ public class ConfirmedState implements OrderState {
 
     @Override
     public void orderDelivered() {
-        throw new IllegalStateException(
-                "Can't deliver an order when the order is in " + getStateDescription() + " state.");
+        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state.");
     }
 
     @Override

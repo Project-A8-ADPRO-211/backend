@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             order.confirmOrder();
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return order;
     }
@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             order.cancelOrder();
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return order;
     }
@@ -95,12 +95,12 @@ public class OrderServiceImpl implements OrderService {
             buyerWallet.setBalance(buyerWallet.getBalance() - price);
             sellerWallet.setBalance(sellerWallet.getBalance() + price);
         } else
-            System.out.println("The buyer or the seller doesn't exist");
+            throw new NullPointerException("This buyer or this seller might not exist");
 
         try {
             order.orderPayed();
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return order;
     }
@@ -109,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             order.shipOrder();
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return order;
     }
@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             order.orderDelivered();
         } catch (IllegalStateException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return order;
     }

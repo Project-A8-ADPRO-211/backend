@@ -1,6 +1,5 @@
 package com.adpro211.a8.tugaskelompok.order.repository;
 
-import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;

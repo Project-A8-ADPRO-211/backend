@@ -5,9 +5,7 @@ import com.adpro211.a8.tugaskelompok.auths.annotation.RequireSeller;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
-import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
-import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.order.service.ItemService;
 import com.adpro211.a8.tugaskelompok.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,7 @@ public class OrderController {
         try {
             Iterable<Order> orderIterable = orderService.getOrdersByBuyer(buyer);
             return ResponseEntity.ok(orderIterable);
-        } catch (Error e) {
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
@@ -57,7 +55,7 @@ public class OrderController {
         try {
             Iterable<Order> orderIterable = orderService.getOrdersBySeller(seller);
             return ResponseEntity.ok(orderIterable);
-        } catch (Error e) {
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
@@ -79,8 +77,13 @@ public class OrderController {
     @PutMapping(path = "/{orderId}/pay", produces = { "application/json" })
     @ResponseBody
     public ResponseEntity payOrder(@PathVariable(name = "orderId") int orderId) { // need to be integrated with E-Wallet
-        Order toPay = orderService.getOrderById(orderId);
-        return ResponseEntity.ok(orderService.payOrder(toPay));
+        try {
+            Order toPay = orderService.getOrderById(orderId);
+            return ResponseEntity.ok(orderService.payOrder(toPay));
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(path = "/{orderId}/deliver", produces = { "application/json" })
