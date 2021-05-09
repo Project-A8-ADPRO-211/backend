@@ -25,9 +25,8 @@ public class WalletServiceImpl implements WalletService {
     private AccountService accountService;
 
     @Override
-    public Wallet createWallet(int id) {
+    public Wallet createWallet(Account account) {
         Wallet wallet = new Wallet();
-        Account account = accountService.getAccountById(id);
         wallet.setAccount(account);
         walletRepository.save(wallet);
         return wallet;
