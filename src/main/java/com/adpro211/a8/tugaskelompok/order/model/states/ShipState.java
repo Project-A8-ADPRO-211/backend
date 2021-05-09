@@ -18,17 +18,17 @@ public class ShipState implements OrderState {
 
     @Override
     public void confirmOrder() {
-        throw new IllegalStateException("The order is already confirmed");
+        throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
     }
 
     @Override
     public void cancelOrder() {
-        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state.");
+        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state");
     }
 
     @Override
     public void shipOrder() {
-        throw new IllegalStateException("The order is already shipped");
+        throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state");
     }
 
     @Override

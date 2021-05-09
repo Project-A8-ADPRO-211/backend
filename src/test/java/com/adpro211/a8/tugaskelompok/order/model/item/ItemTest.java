@@ -1,4 +1,4 @@
-package com.adpro211.a8.tugaskelompok.order.model;
+package com.adpro211.a8.tugaskelompok.order.model.item;
 
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;

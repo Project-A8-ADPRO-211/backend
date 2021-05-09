@@ -11,6 +11,8 @@ import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.repository.ItemRepository;
 import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
+import com.adpro211.a8.tugaskelompok.product.model.Product;
+import com.adpro211.a8.tugaskelompok.product.service.ProductService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    ProductService productService;
 
     public Order createOrder(boolean paymentReceived, int buyerId, int sellerId) {
         Order order = new Order();
@@ -64,6 +69,52 @@ public class OrderServiceImpl implements OrderService {
 
     public Order getOrderById(int id) {
         return orderRepository.findOrderById(id);
+    }
+
+    public Item createItem(String name, int quantity, int orderId, Product product) {
+
+        Item item = new Item();
+        Order order = orderRepository.findOrderById(orderId);
+
+        item.setName(name);
+        item.setProduct(product);
+        item.setProductOwner(product.getOwnerAccount());
+        item.setOrder(order);
+        item.setQuantity(quantity);
+        item.setPrice(product.getPrice() * item.getQuantity());
+
+        try {
+            itemRepository.save(item);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This item already exist");
+        }
+
+        order.getItems().add(item);
+        order.setTotalPrice(order.getTotalPrice() + item.getPrice());
+
+        return item;
+    }
+
+    public boolean checkProductStock(int quantity, Product product) {
+        Item item = new Item();
+
+        item.setProduct(product);
+        item.setQuantity(quantity);
+
+        if (item.getQuantity() > item.getProduct().getStock())
+            throw new IllegalStateException("This product is out of stock");
+
+        return true;
+
+    }
+
+    public Item getItemById(int id) {
+        return itemRepository.findItemById(id);
+    }
+
+    public Iterable<Item> getItemsByOrderId(int orderId) {
+        Order order = orderRepository.findOrderById(orderId);
+        return itemRepository.findAllByOrder(order);
     }
 
     public Order confirmOrder(Order order) {

@@ -18,22 +18,22 @@ public class CancelledState implements OrderState {
 
     @Override
     public void confirmOrder() {
-        throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state.");
+        throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
     }
 
     @Override
     public void cancelOrder() {
-        throw new IllegalStateException("The order is already cancelled.");
+        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state");
     }
 
     @Override
     public void shipOrder() {
-        throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state.");
+        throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state");
     }
 
     @Override
     public void orderDelivered() {
-        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state.");
+        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state");
     }
 
     @Override

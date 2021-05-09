@@ -19,7 +19,7 @@ public class ConfirmedState implements OrderState {
 
     @Override
     public void confirmOrder() {
-        throw new IllegalStateException("The order is already confirmed");
+        throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
     }
 
     @Override
@@ -30,14 +30,14 @@ public class ConfirmedState implements OrderState {
     @Override
     public void shipOrder() {
         if (!this.order.isPaymentReceived()) {
-            throw new IllegalStateException("An order could not be shipped when payment is not received.");
+            throw new IllegalStateException("An order could not be shipped when payment is not received");
         }
         this.order.setCurrentState(new ShipState(this.order));
     }
 
     @Override
     public void orderDelivered() {
-        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state.");
+        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state");
     }
 
     @Override
