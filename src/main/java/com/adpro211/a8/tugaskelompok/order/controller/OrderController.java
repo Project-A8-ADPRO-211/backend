@@ -6,7 +6,8 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
-import com.adpro211.a8.tugaskelompok.order.service.ItemService;
+import com.adpro211.a8.tugaskelompok.order.model.item.Item;
+import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,6 @@ public class OrderController {
 
     @Autowired
     AccountService accountService;
-
-    @Autowired
-    ItemService itemService;
 
     @PostMapping(path = "/checkout", produces = { "application/json" })
     @ResponseBody
@@ -58,6 +56,31 @@ public class OrderController {
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(path = "{orderId}/create-item", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
+            @RequestBody Product product) {
+
+        try {
+            orderService.checkProductStock(item.getQuantity(), product);
+            return ResponseEntity.ok(orderService.createItem(item.getName(), item.getQuantity(), id, product));
+        } catch (IllegalStateException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "/item/{id}", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity getItemById(@PathVariable(value = "id") int id) {
+        return ResponseEntity.ok(orderService.getItemById(id));
+    }
+
+    @GetMapping(path = "/{orderId}/item/all", produces = { "application/json" })
+    @ResponseBody
+    public ResponseEntity<Iterable<Item>> getItemsByOrderId(@PathVariable(name = "orderId") int id) {
+        return ResponseEntity.ok(orderService.getItemsByOrderId(id));
     }
 
     @PutMapping(path = "/{orderId}/confirm", produces = { "application/json" })
