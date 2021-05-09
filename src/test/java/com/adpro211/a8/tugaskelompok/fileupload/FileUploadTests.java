@@ -1,11 +1,7 @@
 package com.adpro211.a8.tugaskelompok.fileupload;
 
-import java.nio.file.Paths;
-import java.util.stream.Stream;
-
-import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageFileNotFoundException;
+import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageFileNotFound;
 import com.adpro211.a8.tugaskelompok.fileupload.storage.StorageService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +16,6 @@ import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -49,7 +43,7 @@ public class FileUploadTests {
     @Test
     public void should404WhenMissingFile() throws Exception {
         given(this.storageService.loadAsResource("test.txt"))
-                .willThrow(StorageFileNotFoundException.class);
+                .willThrow(StorageFileNotFound.class);
 
         this.mvc.perform(get("/upload/files/test.txt")).andExpect(status().isNotFound());
     }
