@@ -95,6 +95,18 @@ public class WalletControllerTest {
         }
     }
 
+    static class WithdrawData {
+        public int idWallet;
+        public double amount;
+        public String noRekening;
+
+        public WithdrawData(int idWallet, double amount, String noRekening) {
+            this.idWallet = idWallet;
+            this.amount = amount;
+            this.noRekening = noRekening;
+        }
+    }
+
     @BeforeEach
     public void setup() {
         account = new Buyer();
@@ -158,6 +170,26 @@ public class WalletControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapToJson(new TopupWithATMData(
                         1,10,"0123456"
+                )))).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testWalletControllerWithdrawWalletSuccess() throws Exception {
+        when(walletService.getWalletById(wallet.getId())).thenReturn(wallet);
+
+        mvc.perform(post("/wallet/withdraw")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new WithdrawData(
+                        1, 10, "0123456"
+                )))).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testWalletControllerWithdrawWalletFailed() throws Exception {
+        mvc.perform(post("/wallet/withdraw")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new WithdrawData(
+                        1, 10, "0123456"
                 )))).andExpect(status().isNotFound());
     }
 }
