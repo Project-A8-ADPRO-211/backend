@@ -48,6 +48,18 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public Wallet withdrawWallet(Wallet wallet, Map<String, Object> requestBody) {
+        double balance = wallet.getBalance();
+        Number amountObj = (Number) requestBody.get("amount");
+        double amount = amountObj.doubleValue();
+
+        double currentBal = balance - amount;
+        if (currentBal >= 0) wallet.setBalance(currentBal);
+
+        return wallet;
+    }
+
+    @Override
     public Wallet getWalletById(int id) {
         return walletRepository.findById(id).orElse(null);
     }
