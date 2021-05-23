@@ -6,22 +6,21 @@ import org.springframework.stereotype.Service;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
-import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
+import com.adpro211.a8.tugaskelompok.order.model.states.*;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
 import com.adpro211.a8.tugaskelompok.order.repository.ItemRepository;
 import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
-import com.adpro211.a8.tugaskelompok.product.service.ProductService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -38,6 +37,16 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     WalletRepository walletRepository;
 
+    Map<String, OrderState> states = new HashMap<String, OrderState>();
+
+    public OrderServiceImpl() {
+        states.put("Open", new OpenState());
+        states.put("Confirmed", new ConfirmedState());
+        states.put("Ship", new ShipState());
+        states.put("Delivered", new DeliveredState());
+        states.put("Cancelled", new CancelledState());
+    }
+
     public Order createOrder(Buyer buyer, int sellerId) {
         Order order = new Order();
         Seller seller = (Seller) accountRepository.findById(sellerId).orElse(null);
@@ -46,7 +55,9 @@ public class OrderServiceImpl implements OrderService {
         order.setSeller(seller);
         order.setTotalPrice(0);
         order.setPaymentReceived(false);
-        order.setCurrentState(new OpenState(order));
+
+        OrderState status = states.get("Open");
+        order.setStatus(status.getStateDescription());
 
         List<Item> itemList = new ArrayList<Item>();
         order.setItems(itemList);
@@ -90,7 +101,11 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This item already exist");
         }
 
-        List<Item> itemsUpdate = order.getItems();
+        List<Item> itemsUpdate;
+        if (order.getItems() == null)
+            itemsUpdate = new ArrayList<Item>();
+        else
+            itemsUpdate = order.getItems();
         itemsUpdate.add(item);
         order.setItems(itemsUpdate);
         order.setTotalPrice(order.getTotalPrice() + item.getPrice());
@@ -120,24 +135,30 @@ public class OrderServiceImpl implements OrderService {
         return itemRepository.findAllByOrder(order);
     }
 
+    public OrderState getStatus(Order order) {
+        return states.get(order.getStatus());
+    }
+
     public Order confirmOrder(Order order) {
+        Order orderConfirmed = order;
         try {
-            order.getCurrentState().confirmOrder();
+            orderConfirmed = getStatus(order).confirmOrder(order);
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
-        orderRepository.save(order);
-        return order;
+        orderRepository.save(orderConfirmed);
+        return orderConfirmed;
     }
 
     public Order cancelOrder(Order order) {
+        Order orderCancelled = order;
         try {
-            order.getCurrentState().cancelOrder();
+            orderCancelled = getStatus(order).cancelOrder(order);
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
-        orderRepository.save(order);
-        return order;
+        orderRepository.save(orderCancelled);
+        return orderCancelled;
     }
 
     public Order payOrder(Order order) {
@@ -173,22 +194,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Order shipOrder(Order order) {
+        Order orderShipped = order;
         try {
-            order.getCurrentState().shipOrder();
+            orderShipped = getStatus(order).shipOrder(order);
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
-        orderRepository.save(order);
-        return order;
+        orderRepository.save(orderShipped);
+        return orderShipped;
     }
 
     public Order deliverOrder(Order order) {
+        Order orderDelivered = order;
         try {
-            order.getCurrentState().orderDelivered();
+            orderDelivered = getStatus(order).orderDelivered(order);
+            orderDelivered.setFinished(true);
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
-        orderRepository.save(order);
-        return order;
+        orderRepository.save(orderDelivered);
+        return orderDelivered;
     }
 }

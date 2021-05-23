@@ -2,10 +2,8 @@ package com.adpro211.a8.tugaskelompok.order.controller;
 
 import java.util.Map;
 
-import com.adpro211.a8.tugaskelompok.auths.annotation.RequireBuyer;
-import com.adpro211.a8.tugaskelompok.auths.annotation.RequireSeller;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
+import com.adpro211.a8.tugaskelompok.auths.annotation.*;
+import com.adpro211.a8.tugaskelompok.auths.models.account.*;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
@@ -113,19 +111,6 @@ public class OrderController {
         Order toShip = orderService.getOrderById(orderId);
         return ResponseEntity.ok(orderService.shipOrder(toShip));
     }
-
-    // @PutMapping(path = "/{orderId}/pay", produces = { "application/json" })
-    // @ResponseBody
-    // public ResponseEntity payOrder(@PathVariable(name = "orderId") int orderId) {
-    // // need to be integrated with E-Wallet
-    // try {
-    // Order toPay = orderService.getOrderById(orderId);
-    // return ResponseEntity.ok(orderService.payOrder(toPay));
-    // } catch (NullPointerException e) {
-    // System.err.println(e.getMessage());
-    // return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    // }
-    // }
 
     @PutMapping(path = "/{orderId}/deliver", produces = { "application/json" })
     @ResponseBody

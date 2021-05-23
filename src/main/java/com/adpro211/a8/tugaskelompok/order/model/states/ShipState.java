@@ -30,6 +30,7 @@ public class ShipState implements OrderState {
     @Override
     public Order orderDelivered(Order order) {
         order.setStatus(deliveredState.getStateDescription());
+        return order;
     }
 
     @Override

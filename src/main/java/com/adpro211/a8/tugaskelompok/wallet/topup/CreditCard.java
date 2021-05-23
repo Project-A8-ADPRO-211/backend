@@ -12,7 +12,7 @@ public class CreditCard implements Topup {
     }
 
     @Override
-    public void topup(Wallet wallet, Map<String, Object> requestBody) {
+    public Wallet topup(Wallet wallet, Map<String, Object> requestBody) {
         Number amountObj = (Number) requestBody.get("amount");
         double amount = amountObj.doubleValue();
         String noKartu = requestBody.get("noKartu").toString();
@@ -21,5 +21,6 @@ public class CreditCard implements Topup {
         double balance = wallet.getBalance();
         balance += amount;
         wallet.setBalance(balance);
+        return wallet;
     }
 }
