@@ -16,9 +16,6 @@ import javax.persistence.*;
 @Data
 public class Order {
 
-    @Transient
-    private OrderState currentState;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -34,29 +31,24 @@ public class Order {
     @Column(name = "payment_received")
     private boolean paymentReceived;
 
+    @Column
+    private String status;
+
+    @Column
+    private boolean isFinished;
+
     @ManyToOne
     private Buyer buyer;
 
     @ManyToOne
     private Seller seller;
 
-    @Column(name = "status_int")
-    private int statusInt;
-
     public Order() {
-        setCurrentState(new OpenState(this));
-    }
-
-    public String getStateDescription() {
-        return currentState.getStateDescription();
+        setStatus(new OpenState().getStateDescription());
     }
 
     public void orderPayed() {
-        setPaymentReceived(true);
-    }
-
-    public boolean isFinished() {
-        return currentState.isFinished();
+        this.setPaymentReceived(true);
     }
 
 }

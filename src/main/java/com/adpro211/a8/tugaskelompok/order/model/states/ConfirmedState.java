@@ -4,39 +4,37 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class ConfirmedState implements OrderState {
 
-    Order order;
-    final String desc = "Confirmed";
-
-    public ConfirmedState(Order order) {
-        this.order = order;
-        this.order.setStatusInt(1);
-    }
+    final static String desc = "Confirmed";
+    final CancelledState cancelledState = new CancelledState();
+    final ShipState shipState = new ShipState();
 
     @Override
     public String getStateDescription() {
-        return this.desc;
+        return desc;
     }
 
     @Override
-    public void confirmOrder() {
+    public Order confirmOrder(Order order) {
         throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
     }
 
     @Override
-    public void cancelOrder() {
-        this.order.setCurrentState(new CancelledState(this.order));
+    public Order cancelOrder(Order order) {
+        order.setStatus(cancelledState.getStateDescription());
+        return order;
     }
 
     @Override
-    public void shipOrder() {
-        if (!this.order.isPaymentReceived()) {
+    public Order shipOrder(Order order) {
+        if (!order.isPaymentReceived()) {
             throw new IllegalStateException("An order could not be shipped when payment is not received");
         }
-        this.order.setCurrentState(new ShipState(this.order));
+        order.setStatus(shipState.getStateDescription());
+        return order;
     }
 
     @Override
-    public void orderDelivered() {
+    public Order orderDelivered(Order order) {
         throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state");
     }
 

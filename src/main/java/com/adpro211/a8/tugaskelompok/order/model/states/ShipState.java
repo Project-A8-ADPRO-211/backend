@@ -3,13 +3,9 @@ package com.adpro211.a8.tugaskelompok.order.model.states;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class ShipState implements OrderState {
-    Order order;
-    final String desc = "Ship";
 
-    public ShipState(Order order) {
-        this.order = order;
-        this.order.setStatusInt(2);
-    }
+    final String desc = "Ship";
+    final DeliveredState deliveredState = new DeliveredState();
 
     @Override
     public String getStateDescription() {
@@ -17,23 +13,23 @@ public class ShipState implements OrderState {
     }
 
     @Override
-    public void confirmOrder() {
+    public Order confirmOrder(Order order) {
         throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
     }
 
     @Override
-    public void cancelOrder() {
+    public Order cancelOrder(Order order) {
         throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state");
     }
 
     @Override
-    public void shipOrder() {
+    public Order shipOrder(Order order) {
         throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state");
     }
 
     @Override
-    public void orderDelivered() {
-        this.order.setCurrentState(new DeliveredState(this.order));
+    public Order orderDelivered(Order order) {
+        order.setStatus(deliveredState.getStateDescription());
     }
 
     @Override

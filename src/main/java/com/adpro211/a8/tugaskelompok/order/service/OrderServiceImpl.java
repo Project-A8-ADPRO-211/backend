@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
+import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
@@ -14,6 +15,7 @@ import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.service.ProductService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -28,23 +30,22 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
 
     @Autowired
-    AccountService accountService;
+    AccountRepository accountRepository;
 
     @Autowired
     ItemRepository itemRepository;
 
     @Autowired
-    ProductService productService;
+    WalletRepository walletRepository;
 
-    public Order createOrder(boolean paymentReceived, int buyerId, int sellerId) {
+    public Order createOrder(Buyer buyer, int sellerId) {
         Order order = new Order();
-        Buyer buyer = (Buyer) accountService.getAccountById(buyerId);
-        Seller seller = (Seller) accountService.getAccountById(sellerId);
+        Seller seller = (Seller) accountRepository.findById(sellerId).orElse(null);
 
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setTotalPrice(0);
-        order.setPaymentReceived(paymentReceived);
+        order.setPaymentReceived(false);
         order.setCurrentState(new OpenState(order));
 
         List<Item> itemList = new ArrayList<Item>();
@@ -71,10 +72,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findOrderById(id);
     }
 
-    public Item createItem(String name, int quantity, int orderId, Product product) {
+    public Order createItem(String name, int quantity, int orderId, Product product) {
 
         Item item = new Item();
-        Order order = orderRepository.findOrderById(orderId);
+        Order order = getOrderById(orderId);
 
         item.setName(name);
         item.setProduct(product);
@@ -89,10 +90,12 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This item already exist");
         }
 
-        order.getItems().add(item);
+        List<Item> itemsUpdate = order.getItems();
+        itemsUpdate.add(item);
+        order.setItems(itemsUpdate);
         order.setTotalPrice(order.getTotalPrice() + item.getPrice());
-
-        return item;
+        orderRepository.save(order);
+        return order;
     }
 
     public boolean checkProductStock(int quantity, Product product) {
@@ -123,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
+        orderRepository.save(order);
         return order;
     }
 
@@ -132,6 +136,7 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
+        orderRepository.save(order);
         return order;
     }
 
@@ -145,15 +150,25 @@ public class OrderServiceImpl implements OrderService {
             Wallet sellerWallet = seller.getWallet();
             buyerWallet.setBalance(buyerWallet.getBalance() - price);
             sellerWallet.setBalance(sellerWallet.getBalance() + price);
+            buyer.setWallet(buyerWallet);
+            seller.setWallet(sellerWallet);
+            walletRepository.save(buyerWallet);
+            walletRepository.save(sellerWallet);
         } catch (NullPointerException e) {
             throw new NullPointerException("This buyer or this seller might not exist");
         }
+
+        accountRepository.save(buyer);
+        accountRepository.save(seller);
+        order.setBuyer(buyer);
+        order.setSeller(seller);
 
         try {
             order.orderPayed();
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
+        orderRepository.save(order);
         return order;
     }
 
@@ -163,6 +178,7 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
+        orderRepository.save(order);
         return order;
     }
 
@@ -172,6 +188,7 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
+        orderRepository.save(order);
         return order;
     }
 }

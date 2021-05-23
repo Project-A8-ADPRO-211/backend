@@ -1,5 +1,7 @@
 package com.adpro211.a8.tugaskelompok.order.controller;
 
+import java.util.Map;
+
 import com.adpro211.a8.tugaskelompok.auths.annotation.RequireBuyer;
 import com.adpro211.a8.tugaskelompok.auths.annotation.RequireSeller;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
@@ -8,6 +10,7 @@ import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
+import com.adpro211.a8.tugaskelompok.product.service.ProductService;
 import com.adpro211.a8.tugaskelompok.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +27,15 @@ public class OrderController {
     @Autowired
     AccountService accountService;
 
+    @Autowired
+    ProductService productService;
+
     @PostMapping(path = "/checkout", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity postOrder(@RequireBuyer Buyer buyer, @RequestBody Order order) {
-        return ResponseEntity.ok(orderService.createOrder(false, buyer.getId(), order.getSeller().getId()));
+    public ResponseEntity postOrder(@RequireBuyer Buyer buyer, @RequestBody Map<String, Object> request) {
+        Number idSeller = (Number) request.get("idSeller");
+        int id = idSeller.intValue();
+        return ResponseEntity.ok(orderService.createOrder(buyer, id));
     }
 
     @GetMapping(path = "/{id}", produces = { "application/json" })
@@ -60,11 +68,15 @@ public class OrderController {
 
     @PostMapping(path = "{orderId}/create-item", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Item item,
-            @RequestBody Product product) {
+    public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Map<String, Object> request) {
+        Number quantityObj = (Number) request.get("quantity");
+        int quantity = quantityObj.intValue();
+        Number productObjId = (Number) request.get("productId");
+        int productId = productObjId.intValue();
+        Product product = productService.getProductById(productId);
 
-        if (orderService.checkProductStock(item.getQuantity(), product)) {
-            return ResponseEntity.ok(orderService.createItem(item.getName(), item.getQuantity(), id, product));
+        if (orderService.checkProductStock(quantity, product)) {
+            return ResponseEntity.ok(orderService.createItem(product.getName(), quantity, id, product));
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
@@ -84,7 +96,14 @@ public class OrderController {
     @PutMapping(path = "/{orderId}/confirm", produces = { "application/json" })
     @ResponseBody
     public ResponseEntity confirmOrder(@PathVariable(name = "orderId") int orderId) {
-        Order toConfirm = orderService.getOrderById(orderId);
+        Order toConfirm;
+        try {
+            toConfirm = orderService.getOrderById(orderId);
+            toConfirm = orderService.payOrder(toConfirm);
+        } catch (NullPointerException e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(orderService.confirmOrder(toConfirm));
     }
 
@@ -95,17 +114,18 @@ public class OrderController {
         return ResponseEntity.ok(orderService.shipOrder(toShip));
     }
 
-    @PutMapping(path = "/{orderId}/pay", produces = { "application/json" })
-    @ResponseBody
-    public ResponseEntity payOrder(@PathVariable(name = "orderId") int orderId) { // need to be integrated with E-Wallet
-        try {
-            Order toPay = orderService.getOrderById(orderId);
-            return ResponseEntity.ok(orderService.payOrder(toPay));
-        } catch (NullPointerException e) {
-            System.err.println(e.getMessage());
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-    }
+    // @PutMapping(path = "/{orderId}/pay", produces = { "application/json" })
+    // @ResponseBody
+    // public ResponseEntity payOrder(@PathVariable(name = "orderId") int orderId) {
+    // // need to be integrated with E-Wallet
+    // try {
+    // Order toPay = orderService.getOrderById(orderId);
+    // return ResponseEntity.ok(orderService.payOrder(toPay));
+    // } catch (NullPointerException e) {
+    // System.err.println(e.getMessage());
+    // return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    // }
+    // }
 
     @PutMapping(path = "/{orderId}/deliver", produces = { "application/json" })
     @ResponseBody

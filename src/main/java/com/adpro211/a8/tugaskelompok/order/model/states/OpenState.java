@@ -4,13 +4,9 @@ import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
 public class OpenState implements OrderState {
 
-    Order order;
-    final String desc = "Open";
-
-    public OpenState(Order order) {
-        this.order = order;
-        this.order.setStatusInt(0);
-    }
+    final static String desc = "Open";
+    final ConfirmedState confirmedState = new ConfirmedState();
+    final CancelledState cancelledState = new CancelledState();
 
     @Override
     public String getStateDescription() {
@@ -18,22 +14,26 @@ public class OpenState implements OrderState {
     }
 
     @Override
-    public void confirmOrder() {
-        this.order.setCurrentState(new ConfirmedState(this.order));
+    public Order confirmOrder(Order order) {
+        order.setStatus(confirmedState.getStateDescription());
+        order.setPaymentReceived(true);
+        return order;
     }
 
     @Override
-    public void cancelOrder() {
-        this.order.setCurrentState(new CancelledState(this.order));
+    public Order cancelOrder(Order order) {
+        order.setStatus(cancelledState.getStateDescription());
+        return order;
     }
 
     @Override
-    public void shipOrder() {
+    public Order shipOrder(Order order) {
         throw new IllegalStateException("Can't ship an order when the order is in " + desc + " state");
+
     }
 
     @Override
-    public void orderDelivered() {
+    public Order orderDelivered(Order order) {
         throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state");
     }
 

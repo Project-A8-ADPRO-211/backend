@@ -7,7 +7,7 @@ import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 
 public interface OrderService {
-    Order createOrder(boolean paymentReceived, int buyerId, int sellerId);
+    Order createOrder(Buyer buyer, int sellerId);
 
     Iterable<Order> getOrdersByBuyer(Buyer buyer);
 
@@ -15,7 +15,7 @@ public interface OrderService {
 
     Order getOrderById(int id);
 
-    Item createItem(String name, int quantity, int orderId, Product product);
+    Order createItem(String name, int quantity, int orderId, Product product);
 
     Item getItemById(int id);
 
