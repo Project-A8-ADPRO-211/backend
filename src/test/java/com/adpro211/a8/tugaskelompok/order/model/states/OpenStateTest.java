@@ -21,8 +21,8 @@ public class OpenStateTest {
         order.setBuyer(new Buyer());
         order.setSeller(new Seller());
 
-        state = new OpenState(order);
-        order.setCurrentState(state);
+        state = new OpenState();
+        order.setStatus(state.getStateDescription());
     }
 
     @Test
@@ -36,34 +36,32 @@ public class OpenStateTest {
     }
 
     @Test
-    void testOpenStateStatusIntIsCorrect() {
-        assertEquals(0, order.getStatusInt());
+    void testOpenStateStatusIsCorrect() {
+        assertEquals("Open", order.getStatus());
     }
 
     @Test
     void testConfirmOrderWorks() {
-        state.confirmOrder();
-        assertEquals("Confirmed", order.getStateDescription());
-        assertEquals(1, order.getStatusInt());
+        Order orderConfirmed = state.confirmOrder(order);
+        assertEquals("Confirmed", orderConfirmed.getStatus());
     }
 
     @Test
     void testCancelOrderWorks() {
-        state.cancelOrder();
-        assertEquals("Cancelled", order.getStateDescription());
-        assertEquals(4, order.getStatusInt());
+        Order orderCancelled = state.cancelOrder(order);
+        assertEquals("Cancelled", orderCancelled.getStatus());
     }
 
     @Test
     void testShipOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
         assertEquals("Can't ship an order when the order is in Open state", exception.getMessage());
 
     }
 
     @Test
     void testDeliverOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
         assertEquals("Can't deliver an order when the order is in Open state", exception.getMessage());
     }
 

@@ -154,6 +154,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderCancelled = order;
         try {
             orderCancelled = getStatus(order).cancelOrder(order);
+            orderCancelled.setFinished(true);
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }

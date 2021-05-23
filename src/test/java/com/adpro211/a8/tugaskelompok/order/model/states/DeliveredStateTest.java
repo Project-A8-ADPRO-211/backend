@@ -21,8 +21,8 @@ public class DeliveredStateTest {
         order.setBuyer(new Buyer());
         order.setSeller(new Seller());
 
-        state = new DeliveredState(order);
-        order.setCurrentState(state);
+        state = new DeliveredState();
+        order.setStatus(state.getStateDescription());
     }
 
     @Test
@@ -36,31 +36,31 @@ public class DeliveredStateTest {
     }
 
     @Test
-    void testShipStateStatusIntIsCorrect() {
-        assertEquals(3, order.getStatusInt());
+    void testShipStateStatusIsCorrect() {
+        assertEquals("Delivered", order.getStatus());
     }
 
     @Test
     void testConfirmOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
         assertEquals("Can't confirm an order when the order is in Delivered state", exception.getMessage());
     }
 
     @Test
     void testCancelOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
         assertEquals("Can't cancel an order when the order is in Delivered state", exception.getMessage());
     }
 
     @Test
     void testShipOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
         assertEquals("Can't ship an order when the order is in Delivered state", exception.getMessage());
     }
 
     @Test
     void testDeliverOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
         assertEquals("Can't deliver an order when the order is in Delivered state", exception.getMessage());
     }
 

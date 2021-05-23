@@ -21,8 +21,8 @@ public class ConfirmedStateTest {
         order.setBuyer(new Buyer());
         order.setSeller(new Seller());
 
-        state = new ConfirmedState(order);
-        order.setCurrentState(state);
+        state = new ConfirmedState();
+        order.setStatus(state.getStateDescription());
     }
 
     @Test
@@ -36,40 +36,38 @@ public class ConfirmedStateTest {
     }
 
     @Test
-    void testConfirmedStateStatusIntIsCorrect() {
-        assertEquals(1, order.getStatusInt());
+    void testConfirmedStateStatusIsCorrect() {
+        assertEquals("Confirmed", order.getStatus());
     }
 
     @Test
     void testConfirmOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
         assertEquals("Can't confirm an order when the order is in Confirmed state", exception.getMessage());
     }
 
     @Test
-    void testCancelOrderWorks() {
-        state.cancelOrder();
-        assertEquals("Cancelled", order.getStateDescription());
-        assertEquals(4, order.getStatusInt());
+    void testCancelOrderThrowsException() {
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
+        assertEquals("Can't cancel an order when the order is in Confirmed state", exception.getMessage());
     }
 
     @Test
     void testCanNotShipOrderIfPaymentNotReceived() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
         assertEquals("An order could not be shipped when payment is not received", exception.getMessage());
     }
 
     @Test
     void testShipOrderWorks() {
         order.setPaymentReceived(true);
-        state.shipOrder();
-        assertEquals("Ship", order.getStateDescription());
-        assertEquals(2, order.getStatusInt());
+        Order orderShipped = state.shipOrder(order);
+        assertEquals("Ship", orderShipped.getStatus());
     }
 
     @Test
     void testDeliverOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
         assertEquals("Can't deliver an order when the order is in Confirmed state", exception.getMessage());
     }
 

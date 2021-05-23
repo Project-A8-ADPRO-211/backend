@@ -20,8 +20,8 @@ public class ShipStateTest {
         order.setBuyer(new Buyer());
         order.setSeller(new Seller());
 
-        state = new ShipState(order);
-        order.setCurrentState(state);
+        state = new ShipState();
+        order.setStatus(state.getStateDescription());
     }
 
     @Test
@@ -35,34 +35,34 @@ public class ShipStateTest {
     }
 
     @Test
-    void testShipStateStatusIntIsCorrect() {
-        assertEquals(2, order.getStatusInt());
+    void testShipStateStatusIsCorrect() {
+        assertEquals("Ship", order.getStatus());
     }
 
     @Test
     void testConfirmOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
         assertEquals("Can't confirm an order when the order is in Ship state", exception.getMessage());
     }
 
     @Test
     void testCancelOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
         assertEquals("Can't cancel an order when the order is in Ship state", exception.getMessage());
     }
 
     @Test
     void testShipOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
         assertEquals("Can't ship an order when the order is in Ship state", exception.getMessage());
     }
 
     @Test
     void testDeliverOrderWorks() {
-        state.orderDelivered();
-        assertEquals("Delivered", order.getStateDescription());
-        assertEquals(3, order.getStatusInt());
-        assertTrue(order.isFinished());
+        Order orderDelivered = state.orderDelivered(order);
+        orderDelivered.setFinished(true);
+        assertEquals("Delivered", orderDelivered.getStatus());
+        assertTrue(orderDelivered.isFinished());
     }
 
     @Test

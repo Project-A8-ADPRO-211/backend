@@ -20,8 +20,8 @@ public class CancelledStateTest {
         order.setBuyer(new Buyer());
         order.setSeller(new Seller());
 
-        state = new CancelledState(order);
-        order.setCurrentState(state);
+        state = new CancelledState();
+        order.setStatus(state.getStateDescription());
     }
 
     @Test
@@ -35,31 +35,31 @@ public class CancelledStateTest {
     }
 
     @Test
-    void testShipStateStatusIntIsCorrect() {
-        assertEquals(4, order.getStatusInt());
+    void testShipStateStatusIsCorrect() {
+        assertEquals("Cancelled", order.getStatus());
     }
 
     @Test
     void testConfirmOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
         assertEquals("Can't confirm an order when the order is in Cancelled state", exception.getMessage());
     }
 
     @Test
     void testCancelOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
         assertEquals("Can't cancel an order when the order is in Cancelled state", exception.getMessage());
     }
 
     @Test
     void testShipOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
         assertEquals("Can't ship an order when the order is in Cancelled state", exception.getMessage());
     }
 
     @Test
     void testDeliverOrderThrowsException() {
-        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered());
+        Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
         assertEquals("Can't deliver an order when the order is in Cancelled state", exception.getMessage());
     }
 

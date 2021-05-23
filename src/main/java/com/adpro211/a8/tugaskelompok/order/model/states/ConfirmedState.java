@@ -20,8 +20,7 @@ public class ConfirmedState implements OrderState {
 
     @Override
     public Order cancelOrder(Order order) {
-        order.setStatus(cancelledState.getStateDescription());
-        return order;
+        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state");
     }
 
     @Override

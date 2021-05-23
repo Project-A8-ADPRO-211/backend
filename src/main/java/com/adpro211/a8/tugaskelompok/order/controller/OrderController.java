@@ -42,26 +42,28 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
-    @GetMapping(path = "/user", produces = { "application/json" })
+    @GetMapping(path = "/all", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity<Iterable<Order>> getOrderByBuyer(@RequireBuyer Buyer buyer) {
-        try {
-            Iterable<Order> orderIterable = orderService.getOrdersByBuyer(buyer);
-            return ResponseEntity.ok(orderIterable);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Iterable<Order>> getOrderByBuyer(@RequestParam String strategy,
+            @RequireLoggedIn Account account) {
+        Iterable<Order> orders = null;
+        if (strategy.equals("buyer")) {
+            Buyer buyer = (Buyer) account;
+            try {
+                orders = orderService.getOrdersByBuyer(buyer);
+            } catch (Exception e) {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        } else if (strategy.equals("seller")) {
+            Seller seller = (Seller) account;
+            try {
+                orders = orderService.getOrdersBySeller(seller);
+            } catch (Exception e) {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
         }
-    }
 
-    @GetMapping(path = "/tenant", produces = { "application/json" })
-    @ResponseBody
-    public ResponseEntity<Iterable<Order>> getOrderBySeller(@RequireSeller Seller seller) {
-        try {
-            Iterable<Order> orderIterable = orderService.getOrdersBySeller(seller);
-            return ResponseEntity.ok(orderIterable);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping(path = "{orderId}/create-item", produces = { "application/json" })

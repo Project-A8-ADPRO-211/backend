@@ -58,6 +58,7 @@ public class OrderTest {
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setTotalPrice(0);
+        order.setFinished(false);
 
         List<Item> itemList = new ArrayList<Item>();
         itemList.add(item);
@@ -81,7 +82,7 @@ public class OrderTest {
     }
 
     @Test
-    void testGetItems() {
+    void testGetSeller() {
         assertEquals(this.seller, order.getSeller());
     }
 
@@ -91,7 +92,7 @@ public class OrderTest {
     }
 
     @Test
-    void testGetStatusInt() {
+    void testGetStatus() {
         assertEquals("Open", order.getStatus());
     }
 
