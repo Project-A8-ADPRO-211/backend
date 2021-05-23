@@ -162,28 +162,27 @@ public class OrderServiceImpl implements OrderService {
         return orderCancelled;
     }
 
+    public void updateWalletBalance(Buyer buyer, Seller seller, double price) {
+        Wallet buyerWallet = buyer.getWallet();
+        Wallet sellerWallet = seller.getWallet();
+        buyerWallet.setBalance(buyerWallet.getBalance() - price);
+        sellerWallet.setBalance(sellerWallet.getBalance() + price);
+        buyer.setWallet(buyerWallet);
+        seller.setWallet(sellerWallet);
+        walletRepository.save(buyerWallet);
+        walletRepository.save(sellerWallet);
+    }
+
     public Order payOrder(Order order) {
         Buyer buyer = order.getBuyer();
         Seller seller = order.getSeller();
         double price = (double) order.getTotalPrice();
 
         try {
-            Wallet buyerWallet = buyer.getWallet();
-            Wallet sellerWallet = seller.getWallet();
-            buyerWallet.setBalance(buyerWallet.getBalance() - price);
-            sellerWallet.setBalance(sellerWallet.getBalance() + price);
-            buyer.setWallet(buyerWallet);
-            seller.setWallet(sellerWallet);
-            walletRepository.save(buyerWallet);
-            walletRepository.save(sellerWallet);
+            updateWalletBalance(buyer, seller, price);
         } catch (NullPointerException e) {
             throw new NullPointerException("This buyer or this seller might not exist");
         }
-
-        accountRepository.save(buyer);
-        accountRepository.save(seller);
-        order.setBuyer(buyer);
-        order.setSeller(seller);
 
         try {
             order.orderPayed();

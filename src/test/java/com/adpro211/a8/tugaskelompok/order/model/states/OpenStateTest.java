@@ -55,14 +55,14 @@ public class OpenStateTest {
     @Test
     void testShipOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
-        assertEquals("Can't ship an order when the order is in Open state", exception.getMessage());
+        assertEquals("Can't ship an order when the order is Open", exception.getMessage());
 
     }
 
     @Test
     void testDeliverOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
-        assertEquals("Can't deliver an order when the order is in Open state", exception.getMessage());
+        assertEquals("Can't deliver an order when the order is Open", exception.getMessage());
     }
 
     @Test

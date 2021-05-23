@@ -42,19 +42,19 @@ public class ShipStateTest {
     @Test
     void testConfirmOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
-        assertEquals("Can't confirm an order when the order is in Ship state", exception.getMessage());
+        assertEquals("Can't confirm an order when the order is Ship", exception.getMessage());
     }
 
     @Test
     void testCancelOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
-        assertEquals("Can't cancel an order when the order is in Ship state", exception.getMessage());
+        assertEquals("Can't cancel an order when the order is Ship", exception.getMessage());
     }
 
     @Test
     void testShipOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
-        assertEquals("Can't ship an order when the order is in Ship state", exception.getMessage());
+        assertEquals("Can't ship an order when the order is Ship", exception.getMessage());
     }
 
     @Test

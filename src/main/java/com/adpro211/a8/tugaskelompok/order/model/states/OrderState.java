@@ -2,17 +2,27 @@ package com.adpro211.a8.tugaskelompok.order.model.states;
 
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
-public interface OrderState {
+public abstract class OrderState {
 
-    public String getStateDescription();
+    public abstract String getStateDescription();
 
-    public Order confirmOrder(Order order);
+    public Order confirmOrder(Order order) {
+        throw new IllegalStateException("Can't confirm an order when the order is " + getStateDescription());
+    }
 
-    public Order cancelOrder(Order order);
+    public Order cancelOrder(Order order) {
+        throw new IllegalStateException("Can't cancel an order when the order is " + getStateDescription());
+    }
 
-    public Order shipOrder(Order order);
+    public Order shipOrder(Order order) {
+        throw new IllegalStateException("Can't ship an order when the order is " + getStateDescription());
+    }
 
-    public Order orderDelivered(Order order);
+    public Order orderDelivered(Order order) {
+        throw new IllegalStateException("Can't deliver an order when the order is " + getStateDescription());
+    }
 
-    public boolean isFinished();
+    public boolean isFinished() {
+        return false;
+    }
 }

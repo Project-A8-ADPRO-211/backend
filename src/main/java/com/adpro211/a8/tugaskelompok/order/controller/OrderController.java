@@ -44,23 +44,19 @@ public class OrderController {
 
     @GetMapping(path = "/all", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity<Iterable<Order>> getOrderByBuyer(@RequestParam String strategy,
+    public ResponseEntity<Iterable<Order>> getOrderByAccount(@RequestParam String strategy,
             @RequireLoggedIn Account account) {
         Iterable<Order> orders = null;
-        if (strategy.equals("buyer")) {
-            Buyer buyer = (Buyer) account;
-            try {
+        try {
+            if (strategy.equals("buyer")) {
+                Buyer buyer = (Buyer) account;
                 orders = orderService.getOrdersByBuyer(buyer);
-            } catch (Exception e) {
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
-            }
-        } else if (strategy.equals("seller")) {
-            Seller seller = (Seller) account;
-            try {
+            } else if (strategy.equals("seller")) {
+                Seller seller = (Seller) account;
                 orders = orderService.getOrdersBySeller(seller);
-            } catch (Exception e) {
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok(orders);

@@ -2,25 +2,15 @@ package com.adpro211.a8.tugaskelompok.order.model.states;
 
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 
-public class ConfirmedState implements OrderState {
+public class ConfirmedState extends OrderState {
 
-    final static String desc = "Confirmed";
+    final static String DESC = "Confirmed";
     final CancelledState cancelledState = new CancelledState();
     final ShipState shipState = new ShipState();
 
     @Override
     public String getStateDescription() {
-        return desc;
-    }
-
-    @Override
-    public Order confirmOrder(Order order) {
-        throw new IllegalStateException("Can't confirm an order when the order is in " + desc + " state");
-    }
-
-    @Override
-    public Order cancelOrder(Order order) {
-        throw new IllegalStateException("Can't cancel an order when the order is in " + desc + " state");
+        return DESC;
     }
 
     @Override
@@ -30,15 +20,5 @@ public class ConfirmedState implements OrderState {
         }
         order.setStatus(shipState.getStateDescription());
         return order;
-    }
-
-    @Override
-    public Order orderDelivered(Order order) {
-        throw new IllegalStateException("Can't deliver an order when the order is in " + desc + " state");
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }

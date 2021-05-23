@@ -4,7 +4,6 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
-import com.adpro211.a8.tugaskelompok.order.model.states.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Data;

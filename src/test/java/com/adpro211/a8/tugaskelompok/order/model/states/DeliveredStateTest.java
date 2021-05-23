@@ -43,25 +43,25 @@ public class DeliveredStateTest {
     @Test
     void testConfirmOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.confirmOrder(order));
-        assertEquals("Can't confirm an order when the order is in Delivered state", exception.getMessage());
+        assertEquals("Can't confirm an order when the order is Delivered", exception.getMessage());
     }
 
     @Test
     void testCancelOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.cancelOrder(order));
-        assertEquals("Can't cancel an order when the order is in Delivered state", exception.getMessage());
+        assertEquals("Can't cancel an order when the order is Delivered", exception.getMessage());
     }
 
     @Test
     void testShipOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.shipOrder(order));
-        assertEquals("Can't ship an order when the order is in Delivered state", exception.getMessage());
+        assertEquals("Can't ship an order when the order is Delivered", exception.getMessage());
     }
 
     @Test
     void testDeliverOrderThrowsException() {
         Throwable exception = assertThrows(IllegalStateException.class, () -> state.orderDelivered(order));
-        assertEquals("Can't deliver an order when the order is in Delivered state", exception.getMessage());
+        assertEquals("Can't deliver an order when the order is Delivered", exception.getMessage());
     }
 
     @Test
