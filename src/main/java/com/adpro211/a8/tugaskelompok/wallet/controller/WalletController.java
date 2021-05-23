@@ -35,13 +35,28 @@ public class WalletController {
     @PostMapping(path = "/topup", produces = {"application/json"})
     @ResponseBody
     public ResponseEntity topupWallet(@RequestParam String strategy, @RequestBody Map<String, Object> request) {
-        if (!request.containsKey("idWallet")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        Number objIdWallet = (Number) request.get("idWallet");
-        int idWallet = objIdWallet.intValue();
-        Wallet wallet = walletService.getWalletById(idWallet);
+        Wallet wallet = findWallet(request);
 
         if (wallet == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         return ResponseEntity.ok(walletService.topupWallet(wallet, strategy, request));
+    }
+
+    @PostMapping(path = "/withdraw", produces ={"apllication/json"})
+    @ResponseBody
+    public ResponseEntity withdrawWallet(@RequestBody Map<String, Object> request) {
+        Wallet wallet = findWallet(request);
+
+        if (wallet == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        return ResponseEntity.ok(walletService.withdrawWallet(wallet, request));
+    }
+
+    private Wallet findWallet(Map<String, Object> request) {
+        if (!request.containsKey("idWallet")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Number objIdWallet = (Number) request.get("idWallet");
+        int idWallet = objIdWallet.intValue();
+
+        return walletService.getWalletById(idWallet);
     }
 }
