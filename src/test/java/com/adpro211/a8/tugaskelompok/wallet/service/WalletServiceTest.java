@@ -74,4 +74,30 @@ public class WalletServiceTest {
 
         assertEquals(50, wallet.getBalance());
     }
+
+    @Test
+    public void testWalletServiceWithdrawWalletBalanceNotEnough() {
+        assertEquals(10, wallet.getBalance());
+
+        Map<String, Object> json = new HashMap<>();
+        json.put("amount", 40);
+        json.put("noRekening", "0123456");
+
+        walletService.withdrawWallet(wallet, json);
+
+        assertEquals(10, wallet.getBalance());
+    }
+
+    @Test
+    public void testWalletServiceWithdrawWalletSuccessful() {
+        assertEquals(10, wallet.getBalance());
+
+        Map<String, Object> json = new HashMap<>();
+        json.put("amount", 10);
+        json.put("noRekening", "0123456");
+
+        walletService.withdrawWallet(wallet, json);
+
+        assertEquals(0, wallet.getBalance());
+    }
 }
