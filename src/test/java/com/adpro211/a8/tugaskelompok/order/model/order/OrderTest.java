@@ -91,13 +91,8 @@ public class OrderTest {
     }
 
     @Test
-    void testGetCurrentState() {
-        assertEquals("Open", order.getStateDescription());
-    }
-
-    @Test
     void testGetStatusInt() {
-        assertEquals(0, order.getStatusInt());
+        assertEquals("Open", order.getStatus());
     }
 
     @Test
