@@ -49,7 +49,6 @@ public class OrderTest {
         item.setQuantity(5);
         item.setOrder(order);
         item.setProduct(product);
-        item.setProductOwner(product.getOwnerAccount());
         item.setPrice(product.getPrice() * item.getQuantity());
 
         order = new Order();
@@ -72,8 +71,18 @@ public class OrderTest {
     }
 
     @Test
+    void testGetWrongId() {
+        assertNotEquals(1, order.getId());
+    }
+
+    @Test
     void testGetPaymentReceived() {
-        assertEquals(false, order.isPaymentReceived());
+        assertFalse(order.isPaymentReceived());
+    }
+
+    @Test
+    void testGetPaymentReceivedTrue() {
+        assertTrue(!order.isPaymentReceived());
     }
 
     @Test
@@ -82,8 +91,20 @@ public class OrderTest {
     }
 
     @Test
+    void testGetWrongBuyer() {
+        Buyer buyerTest = new Buyer();
+        assertNotEquals(buyerTest, order.getBuyer());
+    }
+
+    @Test
     void testGetSeller() {
         assertEquals(this.seller, order.getSeller());
+    }
+
+    @Test
+    void testGetWrongSeller() {
+        Seller sellerTest = new Seller();
+        assertNotEquals(sellerTest, order.getSeller());
     }
 
     @Test
@@ -92,13 +113,32 @@ public class OrderTest {
     }
 
     @Test
+    void testGetWrongItemFromItemList() {
+        Item itemTest = new Item();
+        assertNotEquals(itemTest, order.getItems().get(0));
+    }
+
+    @Test
     void testGetStatus() {
         assertEquals("Open", order.getStatus());
     }
 
     @Test
+    void testGetWrongStatus() {
+        assertNotEquals("Confirmed", order.getStatus());
+        assertNotEquals("Ship", order.getStatus());
+        assertNotEquals("Delivered", order.getStatus());
+        assertNotEquals("Cancelled", order.getStatus());
+    }
+
+    @Test
     void testGetTotalPrice() {
         assertEquals(5000, order.getTotalPrice());
+    }
+
+    @Test
+    void testGetWrongTotalPrice() {
+        assertNotEquals(1000, order.getTotalPrice());
     }
 
     @Test

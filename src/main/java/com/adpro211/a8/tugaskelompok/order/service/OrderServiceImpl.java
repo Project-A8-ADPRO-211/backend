@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
+import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.*;
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
 
     @Autowired
-    AccountRepository accountRepository;
+    AccountService accountService;
 
     @Autowired
     ItemRepository itemRepository;
@@ -49,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Order createOrder(Buyer buyer, int sellerId) {
         Order order = new Order();
-        Seller seller = (Seller) accountRepository.findById(sellerId).orElse(null);
+        Seller seller = (Seller) accountService.getAccountById(sellerId);
 
         order.setBuyer(buyer);
         order.setSeller(seller);
@@ -90,7 +91,6 @@ public class OrderServiceImpl implements OrderService {
 
         item.setName(name);
         item.setProduct(product);
-        item.setProductOwner(product.getOwnerAccount());
         item.setOrder(order);
         item.setQuantity(quantity);
         item.setPrice(product.getPrice() * item.getQuantity());

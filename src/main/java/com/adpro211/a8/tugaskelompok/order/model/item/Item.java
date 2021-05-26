@@ -30,9 +30,6 @@ public class Item {
     @OneToOne
     private Product product;
 
-    @OneToOne
-    private Account productOwner;
-
     @ManyToOne
     private Order order;
 

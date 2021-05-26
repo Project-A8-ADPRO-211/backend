@@ -13,6 +13,7 @@ import com.adpro211.a8.tugaskelompok.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
 @RequestMapping(path = "/order")
@@ -65,11 +66,9 @@ public class OrderController {
     @PostMapping(path = "{orderId}/create-item", produces = { "application/json" })
     @ResponseBody
     public ResponseEntity postItem(@PathVariable(name = "orderId") int id, @RequestBody Map<String, Object> request) {
-        Number quantityObj = (Number) request.get("quantity");
-        int quantity = quantityObj.intValue();
-        Number productObjId = (Number) request.get("productId");
-        int productId = productObjId.intValue();
-        Product product = productService.getProductById(productId);
+        Number qtyObj = (Number) request.get("quantity");
+        int quantity = qtyObj.intValue();
+        Product product = findProduct(request);
 
         if (orderService.checkProductStock(quantity, product)) {
             return ResponseEntity.ok(orderService.createItem(product.getName(), quantity, id, product));
@@ -91,7 +90,7 @@ public class OrderController {
 
     @PutMapping(path = "/{orderId}/confirm", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity confirmOrder(@PathVariable(name = "orderId") int orderId) {
+    public ResponseEntity confirmOrder(@PathVariable(name = "orderId") int orderId, @RequireBuyer Buyer buyer) {
         Order toConfirm;
         try {
             toConfirm = orderService.getOrderById(orderId);
@@ -105,22 +104,32 @@ public class OrderController {
 
     @PutMapping(path = "/{orderId}/ship", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity shipOrder(@PathVariable(name = "orderId") int orderId) {
+    public ResponseEntity shipOrder(@PathVariable(name = "orderId") int orderId, @RequireSeller Seller seller) {
         Order toShip = orderService.getOrderById(orderId);
         return ResponseEntity.ok(orderService.shipOrder(toShip));
     }
 
     @PutMapping(path = "/{orderId}/deliver", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity deliverOrder(@PathVariable(name = "orderId") int orderId) {
+    public ResponseEntity deliverOrder(@PathVariable(name = "orderId") int orderId, @RequireBuyer Buyer buyer) {
         Order toDeliver = orderService.getOrderById(orderId);
         return ResponseEntity.ok(orderService.deliverOrder(toDeliver));
     }
 
     @PutMapping(path = "/{orderId}/cancel", produces = { "application/json" })
     @ResponseBody
-    public ResponseEntity cancelOrder(@PathVariable(name = "orderId") int orderId) {
+    public ResponseEntity cancelOrder(@PathVariable(name = "orderId") int orderId, @RequireLoggedIn Account account) {
         Order toCancel = orderService.getOrderById(orderId);
         return ResponseEntity.ok(orderService.cancelOrder(toCancel));
+    }
+
+    private Product findProduct(Map<String, Object> request) {
+        if (!request.containsKey("productId"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        Number productObjId = (Number) request.get("productId");
+        int productId = productObjId.intValue();
+
+        return productService.getProductById(productId);
     }
 }

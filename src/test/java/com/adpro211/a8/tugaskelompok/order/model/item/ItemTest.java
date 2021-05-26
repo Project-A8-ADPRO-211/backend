@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.*;
+
 public class ItemTest {
 
     private Item item;
@@ -53,10 +55,11 @@ public class ItemTest {
         item.setQuantity(5);
         item.setOrder(order);
         item.setProduct(product);
-        item.setProductOwner(product.getOwnerAccount());
         item.setPrice(product.getPrice() * item.getQuantity());
 
-        order.getItems().add(item);
+        List<Item> items = new ArrayList<Item>();
+        items.add(item);
+        order.setItems(items);
     }
 
     @Test
@@ -65,8 +68,18 @@ public class ItemTest {
     }
 
     @Test
+    void testGetWrongId() {
+        assertNotEquals(1, item.getId());
+    }
+
+    @Test
     void testGetName() {
         assertEquals("mie", item.getName());
+    }
+
+    @Test
+    void testWrongName() {
+        assertNotEquals("bibimbap", item.getName());
     }
 
     @Test
@@ -75,8 +88,19 @@ public class ItemTest {
     }
 
     @Test
+    void testGetWrongQuantity() {
+        assertNotEquals(10, item.getQuantity());
+    }
+
+    @Test
     void testGetOrder() {
         assertEquals(this.order, item.getOrder());
+    }
+
+    @Test
+    void testGetWrongOrder() {
+        Order orderTest = new Order();
+        assertNotEquals(orderTest, item.getOrder());
     }
 
     @Test
@@ -85,13 +109,19 @@ public class ItemTest {
     }
 
     @Test
-    void testGetProductOwner() {
-        assertEquals(this.seller, item.getProductOwner());
+    void testGetWrongProduct() {
+        Product productTest = new Product();
+        assertNotEquals(productTest, item.getProduct());
     }
 
     @Test
     void testGetPrice() {
         assertEquals(5000, item.getPrice());
+    }
+
+    @Test
+    void testGetWrongPrice() {
+        assertNotEquals(2000, item.getPrice());
     }
 
     @Test

@@ -101,7 +101,6 @@ public class OrderServiceDeliveredTest {
         item.setQuantity(2);
         item.setPrice(product.getPrice() * item.getQuantity());
         item.setProduct(product);
-        item.setProductOwner(product.getOwnerAccount());
         itemRepository.save(item);
 
         state = new DeliveredState();
