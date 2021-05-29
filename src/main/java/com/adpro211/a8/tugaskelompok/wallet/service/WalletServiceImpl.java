@@ -1,11 +1,10 @@
 package com.adpro211.a8.tugaskelompok.wallet.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Administrator;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
+import com.adpro211.a8.tugaskelompok.wallet.models.Transaction;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+import com.adpro211.a8.tugaskelompok.wallet.repository.TransactionRepository;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import com.adpro211.a8.tugaskelompok.wallet.topup.ATM;
 import com.adpro211.a8.tugaskelompok.wallet.topup.CreditCard;
@@ -20,6 +19,9 @@ public class WalletServiceImpl implements WalletService {
 
     @Autowired
     private WalletRepository walletRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private AccountService accountService;
@@ -44,6 +46,8 @@ public class WalletServiceImpl implements WalletService {
                 break;
         }
         topup.topup(wallet, requestBody);
+        Transaction transaction = createTransaction(wallet, "Top Up", requestBody);
+        walletRepository.save(wallet);
         return wallet;
     }
 
@@ -54,7 +58,11 @@ public class WalletServiceImpl implements WalletService {
         double amount = amountObj.doubleValue();
 
         double currentBal = balance - amount;
-        if (currentBal >= 0) wallet.setBalance(currentBal);
+        if (currentBal >= 0) {
+            wallet.setBalance(currentBal);
+            Transaction transaction = createTransaction(wallet, "Withdraw", requestBody);
+            walletRepository.save(wallet);
+        }
 
         return wallet;
     }
@@ -62,5 +70,21 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getWalletById(int id) {
         return walletRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Iterable<Transaction> getTransactionByWallet(Wallet wallet) {
+        return transactionRepository.findAllByWallet(wallet);
+    }
+
+    private Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
+        Number amountObj = (Number) requestBody.get("amount");
+        double amount = amountObj.doubleValue();
+
+        Transaction transaction = new Transaction(type, amount);
+        transaction.setWallet(wallet);
+        transactionRepository.save(transaction);
+
+        return transaction;
     }
 }
