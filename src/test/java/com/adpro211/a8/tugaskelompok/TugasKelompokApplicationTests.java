@@ -12,9 +12,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 @SpringBootTest
-@Import(JobRunrStorageConfig.class)
 @EnableConfigurationProperties({AuthProperty.class, StorageProperties.class, EmailProperty.class})
 class TugasKelompokApplicationTests {
 

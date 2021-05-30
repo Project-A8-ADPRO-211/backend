@@ -2,12 +2,16 @@ package com.adpro211.a8.tugaskelompok.auths.controller;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
+import com.adpro211.a8.tugaskelompok.email.config.JobRunrStorageConfig;
 import com.adpro211.a8.tugaskelompok.email.service.MailgunSenderImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.sargue.mailgun.Configuration;
+import org.jobrunr.configuration.JobRunr;
+import org.jobrunr.jobs.filters.RetryFilter;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.storage.sql.common.SqlStorageProviderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +23,11 @@ import javax.annotation.PostConstruct;
 @RequestMapping(path = "/signup")
 public class SignupController {
 
-    @Autowired
     AccountService accountService;
 
-    @Autowired
-    JobScheduler jobScheduler;
+    public SignupController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Value("${email.apiKey}") String apiKey;
     @Value("${email.domain}") String domain;
@@ -32,7 +36,10 @@ public class SignupController {
 
     @PostConstruct
     public void setup(){
-        MailgunSenderImpl.setupSender(apiKey, domain, fromName, fromEmail);
+        JobRunr.configure()
+                .withJobFilter(new RetryFilter(1))
+                .useStorageProvider(SqlStorageProviderFactory.using(JobRunrStorageConfig.dataSourceStatic()))
+                .initialize();
     }
 
 
@@ -47,7 +54,6 @@ public class SignupController {
     }
 
     @Setter
-    @Getter
     @NoArgsConstructor
     public static class UserSignUpGoogle {
         private String token;
@@ -59,7 +65,7 @@ public class SignupController {
     @ResponseBody
     public ResponseEntity<Account> signUpPassword(@RequestBody UserSignUp signUpData) {
         Account account = accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type);
-        jobScheduler.enqueue(() -> MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
+        BackgroundJob.enqueue(() -> MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
                 "Welcome to our project", apiKey, domain, fromName, fromEmail));
         return ResponseEntity.ok(account);
     }
@@ -69,8 +75,10 @@ public class SignupController {
     @ResponseBody
     public ResponseEntity<Account> signUpGoogle(@RequestBody UserSignUpGoogle signUpData) {
         Account account = accountService.createNewAccountGoogle(signUpData.token, signUpData.accType);
-        jobScheduler.enqueue(() -> MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
-                "Welcome to our project", apiKey, domain, fromName, fromEmail));
+        BackgroundJob.enqueue(() -> {
+            MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
+                    "Welcome to our project", apiKey, domain, fromName, fromEmail);
+        });
         return ResponseEntity.ok(account);
     }
 }
