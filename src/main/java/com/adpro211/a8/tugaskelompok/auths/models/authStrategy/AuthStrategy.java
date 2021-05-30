@@ -11,8 +11,6 @@ import java.util.Map;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Getter
-@Setter
 @NoArgsConstructor
 public abstract class AuthStrategy {
 
@@ -23,6 +21,7 @@ public abstract class AuthStrategy {
     private int id;
 
     @ManyToOne
+    @Setter
     private Account assignedUser;
 
     public abstract boolean authenticate(Map<String, Object> requestBody);

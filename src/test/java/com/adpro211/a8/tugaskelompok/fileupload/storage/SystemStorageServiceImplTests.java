@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.fileupload.storage;
 
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -56,7 +57,7 @@ public class SystemStorageServiceImplTests {
         assertThrows(StorageFileNotFound.class, () -> {
             service.loadAsResource("bar.txt");
         });
-        assertThrows(StorageFileNotFound.class, () -> {
+        assertThrows(InvalidPathException.class, () -> {
             service.loadAsResource("b////!waa:9817341");
         });
     }
