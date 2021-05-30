@@ -12,6 +12,9 @@ import com.adpro211.a8.tugaskelompok.auths.repository.BuyerRepository;
 import com.adpro211.a8.tugaskelompok.auths.repository.GoogleOAuthStrategyRepository;
 import com.adpro211.a8.tugaskelompok.auths.repository.PasswordStrategyRepository;
 import com.adpro211.a8.tugaskelompok.auths.util.OAuthVerifier;
+import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
+import com.adpro211.a8.tugaskelompok.wallet.service.WalletService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,6 +26,12 @@ import javax.annotation.PostConstruct;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+
+    @Autowired
+    WalletService walletService;
+
+    @Autowired
+    WalletRepository walletRepository;
 
     public OAuthVerifier getVerifier() {
         if (verifier == null) {
@@ -114,6 +123,7 @@ public class AccountServiceImpl implements AccountService {
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Duplicate email");
         }
+        walletService.createWallet(account);
         return account;
     }
 
