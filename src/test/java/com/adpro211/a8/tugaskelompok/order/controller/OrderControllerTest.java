@@ -209,6 +209,12 @@ public class OrderControllerTest {
     }
 
     @Test
+    void testControllerGetOrdersByAccountNoParam() throws Exception {
+        mvc.perform(get("/order/all").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void testControllerCreateItemSuccess() throws Exception {
         when(orderService.getOrderById(4)).thenReturn(order);
         when(productService.getProductById(3)).thenReturn(product);
@@ -225,14 +231,14 @@ public class OrderControllerTest {
     }
 
     @Test
-    void testControllerGetItemById() throws Exception {
+    void testControllerGetItemByIdSuccess() throws Exception {
         when(orderService.getItemById(5)).thenReturn(item);
         mvc.perform(get("/order/item/5").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    void testControllerGetItemsByOrderId() throws Exception {
+    void testControllerGetItemsByOrderIdSuccess() throws Exception {
         mvc.perform(get("/order/4/item/all").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }

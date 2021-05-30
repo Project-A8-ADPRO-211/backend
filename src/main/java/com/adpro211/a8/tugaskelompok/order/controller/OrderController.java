@@ -126,7 +126,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.cancelOrder(toCancel));
     }
 
-    private Product findProduct(Map<String, Object> request) {
+    private static Product findProduct(Map<String, Object> request) {
         Number productObjId = (Number) request.get("productId");
         int productId = productObjId.intValue();
 
