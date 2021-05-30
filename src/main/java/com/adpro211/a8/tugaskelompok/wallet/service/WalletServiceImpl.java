@@ -1,6 +1,7 @@
 package com.adpro211.a8.tugaskelompok.wallet.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
+import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Transaction;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
@@ -26,11 +27,17 @@ public class WalletServiceImpl implements WalletService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @Override
     public Wallet createWallet(Account account) {
         Wallet wallet = new Wallet();
         wallet.setAccount(account);
         walletRepository.save(wallet);
+
+        account.setWallet(wallet);
+        accountRepository.save(account);
         return wallet;
     }
 
@@ -47,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
         }
         topup.topup(wallet, requestBody);
         Transaction transaction = createTransaction(wallet, "Top Up", requestBody);
-        walletRepository.save(wallet);
+;
         return wallet;
     }
 
