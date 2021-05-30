@@ -26,5 +26,5 @@ env:
 
 
 script:
-  - ./gradlew clean build
+  - ./gradlew clean build --info
   - bash <(curl -s https://codecov.io/bash)
