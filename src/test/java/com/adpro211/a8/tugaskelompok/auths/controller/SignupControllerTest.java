@@ -10,6 +10,7 @@ import com.adpro211.a8.tugaskelompok.auths.repository.SellerRepository;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.auths.service.AuthService;
 import com.adpro211.a8.tugaskelompok.auths.service.JWTService;
+import com.adpro211.a8.tugaskelompok.email.service.MailgunSenderImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,8 @@ class SignupControllerTest {
 
     @BeforeEach
     void setUp() {
+        MailgunSenderImpl.sendRealEmail(false);
+        MailgunSenderImpl.sendRealEmailRequest(true);
         account = new Buyer();
         account.setName("Test1");
         account.setId(1);
