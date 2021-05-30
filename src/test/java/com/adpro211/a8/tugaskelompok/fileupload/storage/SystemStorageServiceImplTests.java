@@ -56,7 +56,7 @@ public class SystemStorageServiceImplTests {
         assertThrows(StorageFileNotFound.class, () -> {
             service.loadAsResource("bar.txt");
         });
-        assertThrows(StorageFileNotFound.class, () -> {
+        assertThrows(Exception.class, () -> {
             service.loadAsResource("b////!waa:9817341");
         });
     }
