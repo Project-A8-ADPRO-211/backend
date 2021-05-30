@@ -122,24 +122,6 @@ public class WalletControllerTest {
     }
 
     @Test
-    public void testWalletControllerCreateWalletSuccess() throws Exception {
-        when(accountService.getAccountById(account.getId())).thenReturn(account);
-
-        mvc.perform(post("/wallet/account/" + account.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapToJson(wallet)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testWalletControllerCreateWalletFailed() throws Exception {
-        mvc.perform(post("/wallet/account/100")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapToJson(wallet)))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void testWalletControllerTopUpWalletWithATMSuccess() throws Exception {
         when(walletService.getWalletById(wallet.getId())).thenReturn(wallet);
 
