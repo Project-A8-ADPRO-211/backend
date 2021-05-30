@@ -59,6 +59,10 @@ test {
     outputs.dir snippetsDir
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
 }
 
 asciidoctor {
