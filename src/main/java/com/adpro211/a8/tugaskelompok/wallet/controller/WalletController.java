@@ -23,16 +23,6 @@ public class WalletController {
     @Autowired
     AccountService accountService;
 
-    @PostMapping(path = "/account/{idAccount}", produces = {"application/json"})
-    @ResponseBody
-    public ResponseEntity postWallet(@PathVariable(value = "idAccount") int idAccount) {
-        Account account = accountService.getAccountById(idAccount);
-
-        if (account == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-        return ResponseEntity.ok(walletService.createWallet(account));
-    }
-
     @PostMapping(path = "/topup", produces = {"application/json"})
     @ResponseBody
     public ResponseEntity topupWallet(@RequestParam String strategy, @RequestBody Map<String, Object> request) {
