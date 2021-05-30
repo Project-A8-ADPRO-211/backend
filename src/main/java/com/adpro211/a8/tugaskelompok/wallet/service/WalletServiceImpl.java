@@ -53,8 +53,8 @@ public class WalletServiceImpl implements WalletService {
                 break;
         }
         topup.topup(wallet, requestBody);
-        Transaction transaction = createTransaction(wallet, "Top Up", requestBody);
-;
+        createTransaction(wallet, "Top Up", requestBody);
+
         return wallet;
     }
 
@@ -67,7 +67,7 @@ public class WalletServiceImpl implements WalletService {
         double currentBal = balance - amount;
         if (currentBal >= 0) {
             wallet.setBalance(currentBal);
-            Transaction transaction = createTransaction(wallet, "Withdraw", requestBody);
+            createTransaction(wallet, "Withdraw", requestBody);
             walletRepository.save(wallet);
         }
 
