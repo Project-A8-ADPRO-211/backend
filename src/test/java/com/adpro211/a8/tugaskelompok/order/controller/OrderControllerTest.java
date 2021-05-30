@@ -25,6 +25,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -71,6 +73,7 @@ public class OrderControllerTest {
     private Product product;
     private Order order;
     private Item item;
+    private Iterable<Item> items;
     private PasswordStrategy passwordStrategy;
 
     private String mapToJson(Object obj) throws JsonProcessingException {
@@ -79,38 +82,20 @@ public class OrderControllerTest {
     }
 
     static class OrderData {
-        public int totalPrice;
-        public boolean paymentReceived;
-        public String status;
-        public boolean isFinished;
-        public List<Item> items;
-        public Account buyer;
-        public Account seller;
+        public int idSeller;
 
-        public OrderData(int totalPrice, String status, Account buyer, Account seller, List<Item> items) {
-            this.totalPrice = totalPrice;
-            this.paymentReceived = false;
-            this.status = status;
-            this.isFinished = false;
-            this.items = items;
-            this.buyer = buyer;
-            this.seller = seller;
+        public OrderData(int idSeller) {
+            this.idSeller = idSeller;
         }
     }
 
     static class ItemData {
-        public String name;
         public int quantity;
-        public int price;
-        public Product product;
-        public Order order;
+        public int productId;
 
-        public ItemData(String name, int quantity, int price, Product product, Order order) {
-            this.name = name;
+        public ItemData(int quantity, int productId) {
             this.quantity = quantity;
-            this.price = price;
-            this.product = product;
-            this.order = order;
+            this.productId = productId;
         }
     }
 
@@ -162,15 +147,125 @@ public class OrderControllerTest {
 
     @Test
     void testControllerCreateOrderSuccess() throws Exception {
-        List<Item> kosong = new ArrayList<Item>();
         when(accountService.getAccountById(buyer.getId())).thenReturn(this.buyer);
         when(jwtService.verifyToken(anyString())).thenReturn("2");
         when(accountService.getAccountById(seller.getId())).thenReturn(this.seller);
+
+        mvc.perform(post("/order/checkout").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new OrderData(1))).header("Authorization", "aaaaaaaaa"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerCreateOrderFails() throws Exception {
+        when(accountService.getAccountById(buyer.getId())).thenReturn(this.buyer);
+        when(jwtService.verifyToken(anyString())).thenReturn("2");
+
+        mvc.perform(post("/order/checkout").contentType(MediaType.APPLICATION_JSON_VALUE).header("Authorization",
+                "aaaaaaaaa")).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerCreateOrderWithInvalidToken() throws Exception {
+        mvc.perform(post("/order/checkout").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new OrderData(1)))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerGetOrderById() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+        mvc.perform(get("/order/4").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerGetOrdersByBuyer() throws Exception {
+        when(accountService.getAccountById(buyer.getId())).thenReturn(this.buyer);
+        when(jwtService.verifyToken(anyString())).thenReturn("2");
+
+        mvc.perform(get("/order/all").param("strategy", "buyer").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerGetOrdersByBuyerWithInvalidToken() throws Exception {
+        mvc.perform(get("/order/all").param("strategy", "buyer").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerGetOrdersBySeller() throws Exception {
+        when(accountService.getAccountById(seller.getId())).thenReturn(this.seller);
         when(jwtService.verifyToken(anyString())).thenReturn("1");
 
-        mvc.perform(
-                post("/order/checkout").header("Authorization", "test").contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapToJson(new OrderData(0, "Open", this.buyer, this.seller, kosong))))
+        mvc.perform(get("/order/all").param("strategy", "seller").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerGetOrdersBySellerWithInvalidToken() throws Exception {
+        mvc.perform(get("/order/all").param("strategy", "seller").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerCreateItemSuccess() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+        when(productService.getProductById(3)).thenReturn(product);
+        when(orderService.checkProductStock(2, product)).thenReturn(true);
+
+        mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new ItemData(2, 3)))).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerCreateItemFails() throws Exception {
+        mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerGetItemById() throws Exception {
+        when(orderService.getItemById(5)).thenReturn(item);
+        mvc.perform(get("/order/item/5").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerGetItemsByOrderId() throws Exception {
+        mvc.perform(get("/order/4/item/all").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerConfirmOrderSuccess() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+
+        mvc.perform(put("/order/4/confirm").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerShipOrderSuccess() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+
+        mvc.perform(put("/order/4/ship").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerDeliverOrderSuccess() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+
+        mvc.perform(put("/order/4/deliver").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerCancelOrderSuccess() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+
+        mvc.perform(put("/order/4/cancel").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful());
     }
 }

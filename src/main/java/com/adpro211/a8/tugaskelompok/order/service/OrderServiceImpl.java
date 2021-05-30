@@ -50,7 +50,12 @@ public class OrderServiceImpl implements OrderService {
 
     public Order createOrder(Buyer buyer, int sellerId) {
         Order order = new Order();
-        Seller seller = (Seller) accountService.getAccountById(sellerId);
+        Seller seller;
+        try {
+            seller = (Seller) accountService.getAccountById(sellerId);
+        } catch (NullPointerException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seller doesn't exist");
+        }
 
         order.setBuyer(buyer);
         order.setSeller(seller);
