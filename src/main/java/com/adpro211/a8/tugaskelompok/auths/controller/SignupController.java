@@ -2,7 +2,6 @@ package com.adpro211.a8.tugaskelompok.auths.controller;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
-import com.adpro211.a8.tugaskelompok.email.config.JobRunrStorageConfig;
 import com.adpro211.a8.tugaskelompok.email.service.MailgunSenderImpl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,14 +9,14 @@ import lombok.Setter;
 import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.jobs.filters.RetryFilter;
 import org.jobrunr.scheduling.BackgroundJob;
-import org.jobrunr.scheduling.JobScheduler;
 import org.jobrunr.storage.sql.common.SqlStorageProviderFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 
 @RestController
 @RequestMapping(path = "/signup")
@@ -36,9 +35,14 @@ public class SignupController {
 
     @PostConstruct
     public void setup(){
+        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.h2.Driver");
+        dataSourceBuilder.url("jdbc:h2:mem:test");
+        dataSourceBuilder.username("SA");
+        dataSourceBuilder.password("");
         JobRunr.configure()
                 .withJobFilter(new RetryFilter(1))
-                .useStorageProvider(SqlStorageProviderFactory.using(JobRunrStorageConfig.dataSourceStatic()))
+                .useStorageProvider(SqlStorageProviderFactory.using(dataSourceBuilder.build()))
                 .initialize();
     }
 
