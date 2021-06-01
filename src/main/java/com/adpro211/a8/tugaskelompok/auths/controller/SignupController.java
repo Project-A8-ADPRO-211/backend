@@ -3,6 +3,7 @@ package com.adpro211.a8.tugaskelompok.auths.controller;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.email.service.MailgunSenderImpl;
+import io.micrometer.core.annotation.Timed;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+@Timed
 @RestController
 @RequestMapping(path = "/signup")
 public class SignupController {

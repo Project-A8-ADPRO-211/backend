@@ -4,6 +4,7 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.auths.service.AuthService;
 import com.adpro211.a8.tugaskelompok.auths.service.JWTService;
+import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
+@Timed
 @RestController
 @RequestMapping(path = "/login")
 public class LoginController {
