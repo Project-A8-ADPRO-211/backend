@@ -6,6 +6,7 @@ import com.adpro211.a8.tugaskelompok.product.model.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "item")
@@ -30,7 +31,9 @@ public class Item {
     @OneToOne
     private Product product;
 
+    @JsonBackReference
     @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
 }

@@ -4,7 +4,10 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
 import com.adpro211.a8.tugaskelompok.order.model.states.OpenState;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Data;
 
@@ -20,10 +23,6 @@ public class Order {
     @Column(name = "id")
     private int id;
 
-    @OneToMany(mappedBy = "order")
-    @JsonIgnore
-    private List<Item> items;
-
     @Column(name = "totalPrice")
     private int totalPrice;
 
@@ -36,6 +35,22 @@ public class Order {
     @Column
     private boolean isFinished;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order")
+    private List<Item> items;
+
+    @Column(name = "order_time", columnDefinition = "TIMESTAMP")
+    private LocalDateTime orderTime;
+
+    @Column(name = "payment_time", columnDefinition = "TIMESTAMP")
+    private LocalDateTime paymentTime;
+
+    @Column(name = "ship_time", columnDefinition = "TIMESTAMP")
+    private LocalDateTime shipTime;
+
+    @Column(name = "completed_time", columnDefinition = "TIMESTAMP")
+    private LocalDateTime completedTime;
+
     @ManyToOne
     private Buyer buyer;
 
@@ -44,6 +59,7 @@ public class Order {
 
     public Order() {
         setStatus(new OpenState().getStateDescription());
+        setOrderTime(LocalDateTime.now());
     }
 
     public void orderPayed() {
