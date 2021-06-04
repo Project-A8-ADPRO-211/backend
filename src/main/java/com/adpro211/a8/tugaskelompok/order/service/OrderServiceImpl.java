@@ -182,6 +182,8 @@ public class OrderServiceImpl implements OrderService {
         Buyer buyer = order.getBuyer();
         Seller seller = order.getSeller();
         double price = (double) order.getTotalPrice();
+        if (order.getStatus().equals("Confirmed"))
+            return order;
 
         try {
             updateWalletBalance(buyer, seller, price);
