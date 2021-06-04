@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
         Buyer buyer = order.getBuyer();
         Seller seller = order.getSeller();
         double price = (double) order.getTotalPrice();
-        if (order.getStatus().equals("Confirmed"))
+        if (!order.getStatus().equals("Open"))
             return order;
 
         try {

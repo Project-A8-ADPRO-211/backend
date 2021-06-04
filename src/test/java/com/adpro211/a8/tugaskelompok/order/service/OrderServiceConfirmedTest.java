@@ -108,7 +108,7 @@ public class OrderServiceConfirmedTest {
 
         order = new Order();
         order.setId(1);
-        order.setPaymentReceived(false);
+        order.setPaymentReceived(true);
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setStatus(state.getStateDescription());
@@ -139,6 +139,7 @@ public class OrderServiceConfirmedTest {
 
     @Test
     void testShipOrderFailsWhenNotPayedYet() {
+        order.setPaymentReceived(false);
         Order toShip = orderService.shipOrder(order);
         assertNotEquals("Ship", toShip.getStatus());
         assertFalse(toShip.isFinished());
@@ -147,7 +148,6 @@ public class OrderServiceConfirmedTest {
 
     @Test
     void testShipOrderSuccessWhenOrderPayed() {
-        order.setPaymentReceived(true);
         Order toShip = orderService.shipOrder(order);
         assertEquals("Ship", toShip.getStatus());
         assertFalse(toShip.isFinished());
@@ -163,10 +163,10 @@ public class OrderServiceConfirmedTest {
     }
 
     @Test
-    void testPayOrderWorks() {
+    void testPayOrderDoNotWorkWhenStateIsConfirmed() {
         Order toPay = orderService.payOrder(order);
         assertTrue(toPay.isPaymentReceived());
-        verify(orderRepository, times(1)).save(any());
+        verify(orderRepository, times(0)).save(any());
     }
 
 }
