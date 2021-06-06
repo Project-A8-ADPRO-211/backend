@@ -13,6 +13,7 @@ import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,7 @@ public class OrderServiceDeliveredTest {
     private Product product;
     private Wallet walletBuyer;
     private Wallet walletSeller;
+    private LocalDateTime paymentTime, shipTime, completedTime;
 
     @BeforeEach
     void setUp() {
@@ -111,6 +113,12 @@ public class OrderServiceDeliveredTest {
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setStatus(state.getStateDescription());
+        paymentTime = LocalDateTime.now();
+        order.setPaymentTime(paymentTime);
+        shipTime = LocalDateTime.now();
+        order.setShipTime(shipTime);
+        completedTime = LocalDateTime.now();
+        order.setCompletedTime(completedTime);
 
         List<Item> itemList = new ArrayList<Item>();
         itemList.add(item);
@@ -124,6 +132,7 @@ public class OrderServiceDeliveredTest {
     void testConfirmOrderFailsWhenStateIsDelivered() {
         Order toConfirm = orderService.confirmOrder(order);
         assertNotEquals("Confirmed", toConfirm.getStatus());
+        assertNotNull(toConfirm.getPaymentTime());
         assertFalse(toConfirm.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -140,6 +149,7 @@ public class OrderServiceDeliveredTest {
     void testShipOrderFailsWhenStateIsDelivered() {
         Order toShip = orderService.shipOrder(order);
         assertNotEquals("Ship", toShip.getStatus());
+        assertNotNull(toShip.getShipTime());
         assertFalse(toShip.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -150,6 +160,7 @@ public class OrderServiceDeliveredTest {
         toDeliver.setFinished(true);
         assertEquals("Delivered", toDeliver.getStatus());
         assertTrue(toDeliver.isFinished());
+        assertEquals(completedTime, toDeliver.getCompletedTime());
         verify(orderRepository, times(1)).save(any());
     }
 }

@@ -20,7 +20,7 @@ import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.time.*;
 import java.util.*;
 
 @Service
@@ -148,6 +148,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderConfirmed = order;
         try {
             orderConfirmed = getStatus(order).confirmOrder(order);
+            orderConfirmed.setPaymentTime(LocalDateTime.now());
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
@@ -204,6 +205,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderShipped = order;
         try {
             orderShipped = getStatus(order).shipOrder(order);
+            orderShipped.setShipTime(LocalDateTime.now());
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }
@@ -216,6 +218,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderDelivered = getStatus(order).orderDelivered(order);
             orderDelivered.setFinished(true);
+            orderDelivered.setCompletedTime(LocalDateTime.now());
         } catch (IllegalStateException e) {
             System.err.println(e.getMessage());
         }

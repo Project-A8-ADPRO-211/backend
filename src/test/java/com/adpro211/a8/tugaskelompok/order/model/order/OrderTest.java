@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class OrderTest {
 
@@ -21,7 +20,6 @@ public class OrderTest {
     private Buyer buyer;
     private Seller seller;
     private LocalDateTime orderTime, paymentTime, shipTime, completedTime;
-    private DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     @BeforeEach
     void setUp() {

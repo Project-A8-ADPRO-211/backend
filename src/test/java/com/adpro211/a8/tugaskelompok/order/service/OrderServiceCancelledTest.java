@@ -121,9 +121,15 @@ public class OrderServiceCancelledTest {
 
     // Tests when Order State is Delivered
     @Test
+    void testOrderTimeNotNull() {
+        assertNotNull(order.getOrderTime());
+    }
+
+    @Test
     void testConfirmOrderFailsWhenStateIsCancelled() {
         Order toConfirm = orderService.confirmOrder(order);
         assertNotEquals("Confirmed", toConfirm.getStatus());
+        assertNull(toConfirm.getPaymentTime());
         assertFalse(toConfirm.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -141,6 +147,7 @@ public class OrderServiceCancelledTest {
     void testShipOrderFailsWhenStateIsCancelled() {
         Order toShip = orderService.shipOrder(order);
         assertNotEquals("Ship", toShip.getStatus());
+        assertNull(toShip.getShipTime());
         assertFalse(toShip.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -150,6 +157,7 @@ public class OrderServiceCancelledTest {
         Order toDeliver = orderService.deliverOrder(order);
         toDeliver.setFinished(true);
         assertNotEquals("Delivered", toDeliver.getStatus());
+        assertNull(toDeliver.getCompletedTime());
         assertTrue(toDeliver.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
