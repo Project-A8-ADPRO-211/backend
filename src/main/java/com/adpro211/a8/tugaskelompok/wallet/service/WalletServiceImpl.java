@@ -43,8 +43,9 @@ public class WalletServiceImpl implements WalletService {
                 topup = new CreditCard();
                 break;
         }
-        topup.topup(wallet, requestBody);
-        return wallet;
+        Wallet walletBaru = topup.topup(wallet, requestBody);
+        walletRepository.save(walletBaru);
+        return walletBaru;
     }
 
     @Override

@@ -17,14 +17,14 @@ import java.util.Set;
 @Entity
 @Table(name = "account_tbl")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="account_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "account_type", discriminatorType = DiscriminatorType.STRING)
 @Setter
 @Getter
 @NoArgsConstructor
 public abstract class Account {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column
@@ -45,7 +45,7 @@ public abstract class Account {
     @JsonIgnore
     private List<Review> reviewList;
 
-    @Column(name="account_type", nullable=false, insertable = false, updatable = false)
+    @Column(name = "account_type", nullable = false, insertable = false, updatable = false)
     private String accountType;
 
     @OneToOne(mappedBy = "account")
