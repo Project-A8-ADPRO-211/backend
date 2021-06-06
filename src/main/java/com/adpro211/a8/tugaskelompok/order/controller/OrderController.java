@@ -99,7 +99,6 @@ public class OrderController {
             toConfirm = orderService.getOrderById(orderId);
             toConfirm = orderService.payOrder(toConfirm);
         } catch (NullPointerException e) {
-            System.err.println(e.getMessage());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(orderService.confirmOrder(toConfirm));
