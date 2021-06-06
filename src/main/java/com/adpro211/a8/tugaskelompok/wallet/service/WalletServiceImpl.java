@@ -25,9 +25,6 @@ public class WalletServiceImpl implements WalletService {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private AccountService accountService;
-
-    @Autowired
     private AccountRepository accountRepository;
 
     @Override
