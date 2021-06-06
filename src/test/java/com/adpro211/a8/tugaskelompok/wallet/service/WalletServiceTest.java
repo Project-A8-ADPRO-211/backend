@@ -50,7 +50,6 @@ public class WalletServiceTest {
         wallet.setBalance(10);
         wallet.setAccount(account);
         wallet.setTransactions(new ArrayList<>());
-        walletRepository.save(wallet);
     }
 
     @Test
