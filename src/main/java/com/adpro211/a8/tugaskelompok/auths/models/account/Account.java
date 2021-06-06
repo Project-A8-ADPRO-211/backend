@@ -5,6 +5,7 @@ import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.product.model.Review;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,7 @@ public abstract class Account {
     private String accountType;
 
     @OneToOne(mappedBy = "account")
+    @JsonIgnoreProperties({"account"})
     private Wallet wallet;
 
 }
