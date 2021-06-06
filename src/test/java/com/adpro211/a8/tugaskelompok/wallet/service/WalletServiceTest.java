@@ -49,6 +49,8 @@ public class WalletServiceTest {
         wallet.setId(1);
         wallet.setBalance(10);
         wallet.setAccount(account);
+        wallet.setTransactions(new ArrayList<>());
+        walletRepository.save(wallet);
     }
 
     @Test
@@ -61,7 +63,6 @@ public class WalletServiceTest {
     @Test
     public void testWalletServiceTopUpWalletUsingATM() {
         assertEquals(10, wallet.getBalance());
-        when(transactionRepository.save(any())).thenReturn(null);
 
         Map<String, Object> json = new HashMap<>();
         json.put("amount", 40);
@@ -70,6 +71,7 @@ public class WalletServiceTest {
         walletService.topupWallet(wallet, "ATM", json);
 
         assertEquals(50, wallet.getBalance());
+        verify(transactionRepository, times(1)).save(any());
     }
 
     @Test
@@ -84,6 +86,7 @@ public class WalletServiceTest {
         walletService.topupWallet(wallet, "CreditCard", json);
 
         assertEquals(50, wallet.getBalance());
+        verify(transactionRepository, times(1)).save(any());
     }
 
     @Test
@@ -97,6 +100,7 @@ public class WalletServiceTest {
         walletService.withdrawWallet(wallet, json);
 
         assertEquals(10, wallet.getBalance());
+        verify(transactionRepository, times(0)).save(any());
     }
 
     @Test
@@ -110,5 +114,11 @@ public class WalletServiceTest {
         walletService.withdrawWallet(wallet, json);
 
         assertEquals(0, wallet.getBalance());
+        verify(transactionRepository, times(1)).save(any());
+    }
+
+    @Test
+    public void testWalletServiceGetTransactionByWallet() {
+        assertEquals(new ArrayList<>(), walletService.getTransactionByWallet(wallet));
     }
 }

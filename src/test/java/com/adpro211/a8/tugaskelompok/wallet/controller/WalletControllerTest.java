@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WalletController.class)
@@ -107,6 +108,14 @@ public class WalletControllerTest {
         }
     }
 
+    static class WalletData {
+        public int idWallet;
+
+        public WalletData(int idWallet) {
+            this.idWallet = idWallet;
+        }
+    }
+
     @BeforeEach
     public void setup() {
         account = new Buyer();
@@ -173,5 +182,23 @@ public class WalletControllerTest {
                 .content(mapToJson(new WithdrawData(
                         1, 10, "0123456"
                 )))).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testWalletControllerGetWallet() throws Exception {
+        mvc.perform(get("/wallet/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new WalletData(
+                        1
+                )))).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void testWalletControllerGetTransaction() throws Exception {
+        mvc.perform(get("/wallet/transaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapToJson(new WalletData(
+                        1
+                )))).andExpect(status().is2xxSuccessful());
     }
 }
