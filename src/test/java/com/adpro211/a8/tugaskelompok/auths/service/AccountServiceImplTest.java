@@ -11,6 +11,7 @@ import com.adpro211.a8.tugaskelompok.auths.repository.GoogleOAuthStrategyReposit
 import com.adpro211.a8.tugaskelompok.auths.repository.PasswordStrategyRepository;
 import com.adpro211.a8.tugaskelompok.auths.util.OAuthVerifier;
 import com.adpro211.a8.tugaskelompok.auths.utls.FakeOAuthVerifier;
+import com.adpro211.a8.tugaskelompok.wallet.service.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +49,9 @@ class AccountServiceImplTest {
     AccountRepository accountRepository;
 
     @Mock
+    WalletService walletService;
+
+    @Mock
     BuyerRepository buyerRepository;
 
     @Mock
@@ -65,12 +69,13 @@ class AccountServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        accountService = new AccountServiceImpl(accountRepository, buyerRepository, passwordStrategyRepository, googleOAuthStrategyRepository);
+        accountService = new AccountServiceImpl(accountRepository, buyerRepository, passwordStrategyRepository, googleOAuthStrategyRepository, walletService);
         accountService.setUp();
     }
 
     @Test
     void testCreateAccountsSuccess() {
+        when(walletService.createWallet(any())).thenReturn(null);
 
         accountService.createAccount("a", "abc@def.com", "admin");
         accountService.createAccount("add", "dd@def.com", "buyer");
@@ -81,6 +86,7 @@ class AccountServiceImplTest {
 
     @Test
     void testCreateAccountFullSuccess() {
+        when(walletService.createWallet(any())).thenReturn(null);
 
         accountService.createNewAccount("aa", "abc@def.com", "test", "admin");
 

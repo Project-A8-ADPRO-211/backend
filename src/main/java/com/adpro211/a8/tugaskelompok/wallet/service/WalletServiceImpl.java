@@ -1,11 +1,11 @@
 package com.adpro211.a8.tugaskelompok.wallet.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Administrator;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
-import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
+import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
+import com.adpro211.a8.tugaskelompok.wallet.models.Transaction;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+import com.adpro211.a8.tugaskelompok.wallet.repository.TransactionRepository;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import com.adpro211.a8.tugaskelompok.wallet.topup.ATM;
 import com.adpro211.a8.tugaskelompok.wallet.topup.CreditCard;
@@ -22,13 +22,19 @@ public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
 
     @Autowired
-    private AccountService accountService;
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Override
     public Wallet createWallet(Account account) {
         Wallet wallet = new Wallet();
         wallet.setAccount(account);
         walletRepository.save(wallet);
+
+        account.setWallet(wallet);
+        accountRepository.save(account);
         return wallet;
     }
 
@@ -43,9 +49,10 @@ public class WalletServiceImpl implements WalletService {
                 topup = new CreditCard();
                 break;
         }
-        Wallet walletBaru = topup.topup(wallet, requestBody);
-        walletRepository.save(walletBaru);
-        return walletBaru;
+        topup.topup(wallet, requestBody);
+        createTransaction(wallet, "Top Up", requestBody);
+
+        return wallet;
     }
 
     @Override
@@ -55,7 +62,11 @@ public class WalletServiceImpl implements WalletService {
         double amount = amountObj.doubleValue();
 
         double currentBal = balance - amount;
-        if (currentBal >= 0) wallet.setBalance(currentBal);
+        if (currentBal >= 0) {
+            wallet.setBalance(currentBal);
+            createTransaction(wallet, "Withdraw", requestBody);
+            walletRepository.save(wallet);
+        }
 
         return wallet;
     }
@@ -63,5 +74,21 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getWalletById(int id) {
         return walletRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Iterable<Transaction> getTransactionByWallet(Wallet wallet) {
+        return transactionRepository.findAllByWallet(wallet);
+    }
+
+    private Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
+        Number amountObj = (Number) requestBody.get("amount");
+        double amount = amountObj.doubleValue();
+
+        Transaction transaction = new Transaction(type, amount);
+        transaction.setWallet(wallet);
+        transactionRepository.save(transaction);
+
+        return transaction;
     }
 }

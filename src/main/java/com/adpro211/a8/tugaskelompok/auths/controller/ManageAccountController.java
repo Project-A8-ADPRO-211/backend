@@ -30,12 +30,12 @@ public class ManageAccountController
         return ResponseEntity.ok(account);
     }
 
-    @PutMapping(produces = {"application/json"})
-    @ResponseBody
-    public ResponseEntity<Account> updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
-        currentAcc.setName(inputAcc.getName());
-        return ResponseEntity.ok(accountService.updateAccount(currentAcc.getId(), currentAcc));
-    }
+//    @PutMapping(produces = {"application/json"})
+//    @ResponseBody
+//    public ResponseEntity<Account> updateAccount(@RequestBody Account inputAcc, @RequireLoggedIn Account currentAcc) {
+//        currentAcc.setName(inputAcc.getName());
+//        return ResponseEntity.ok(accountService.updateAccount(currentAcc.getId(), currentAcc));
+//    }
 
     @PutMapping(path = "/updateBuyer", produces = {"application/json"})
     @ResponseBody
