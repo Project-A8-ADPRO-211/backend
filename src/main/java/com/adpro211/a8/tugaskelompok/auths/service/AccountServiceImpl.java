@@ -27,11 +27,7 @@ import javax.annotation.PostConstruct;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
     WalletService walletService;
-
-    @Autowired
-    WalletRepository walletRepository;
 
     public OAuthVerifier getVerifier() {
         if (verifier == null) {
@@ -58,11 +54,13 @@ public class AccountServiceImpl implements AccountService {
     public AccountServiceImpl(@Autowired AccountRepository accountRepository,
                               @Autowired BuyerRepository buyerRepository,
                               @Autowired PasswordStrategyRepository passwordStrategyRepository,
-                              @Autowired GoogleOAuthStrategyRepository googleOAuthStrategyRepository) {
+                              @Autowired GoogleOAuthStrategyRepository googleOAuthStrategyRepository,
+                              @Autowired WalletService walletService) {
         this.accountRepository = accountRepository;
         this.buyerRepository = buyerRepository;
         this.passwordStrategyRepository = passwordStrategyRepository;
         this.googleOAuthStrategyRepository = googleOAuthStrategyRepository;
+        this.walletService = walletService;
     }
 
     EmailValidator emailValidator;

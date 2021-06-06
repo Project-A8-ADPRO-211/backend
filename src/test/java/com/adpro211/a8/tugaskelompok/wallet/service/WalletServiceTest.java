@@ -2,7 +2,9 @@ package com.adpro211.a8.tugaskelompok.wallet.service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
+import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
+import com.adpro211.a8.tugaskelompok.wallet.repository.TransactionRepository;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 
@@ -24,6 +27,12 @@ public class WalletServiceTest {
 
     @Mock
     private WalletRepository walletRepository;
+
+    @Mock
+    private AccountRepository accountRepository;
+
+    @Mock
+    private TransactionRepository transactionRepository;
 
     private Wallet wallet;
     private Account account;
@@ -44,6 +53,7 @@ public class WalletServiceTest {
 
     @Test
     public void testWalletServiceCreateWallet() {
+        when(accountRepository.save(any())).thenReturn(null);
         Wallet wallet1 = walletService.createWallet(account);
         verify(walletRepository, times(1)).save(any());
     }
@@ -51,6 +61,7 @@ public class WalletServiceTest {
     @Test
     public void testWalletServiceTopUpWalletUsingATM() {
         assertEquals(10, wallet.getBalance());
+        when(transactionRepository.save(any())).thenReturn(null);
 
         Map<String, Object> json = new HashMap<>();
         json.put("amount", 40);
