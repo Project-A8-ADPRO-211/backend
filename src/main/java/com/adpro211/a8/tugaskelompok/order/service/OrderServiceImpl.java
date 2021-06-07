@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Seller;
-import com.adpro211.a8.tugaskelompok.auths.repository.AccountRepository;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.order.model.item.Item;
@@ -16,6 +15,7 @@ import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
+import com.adpro211.a8.tugaskelompok.wallet.service.WalletServiceImpl;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -37,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     WalletRepository walletRepository;
+
+    WalletServiceImpl walletService;
 
     Map<String, OrderState> states = new HashMap<String, OrderState>();
 
@@ -168,6 +170,13 @@ public class OrderServiceImpl implements OrderService {
         return orderCancelled;
     }
 
+    public void createOrderTransaction(Wallet buyerWallet, Wallet sellerWallet, double price) {
+        Map<String, Object> amount = new HashMap<String, Object>();
+        amount.put("amount", price);
+        walletService.createTransaction(buyerWallet, "Buy", amount);
+        walletService.createTransaction(sellerWallet, "Sell", amount);
+    }
+
     public boolean updateWalletBalance(Buyer buyer, Seller seller, double price) throws NullPointerException {
         Wallet buyerWallet = buyer.getWallet();
         Wallet sellerWallet = seller.getWallet();
@@ -175,6 +184,7 @@ public class OrderServiceImpl implements OrderService {
             throw new NullPointerException();
         buyerWallet.setBalance(buyerWallet.getBalance() - price);
         sellerWallet.setBalance(sellerWallet.getBalance() + price);
+        createOrderTransaction(buyerWallet, sellerWallet, price);
         buyer.setWallet(buyerWallet);
         seller.setWallet(sellerWallet);
         walletRepository.save(buyerWallet);
