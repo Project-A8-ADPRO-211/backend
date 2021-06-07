@@ -81,7 +81,7 @@ public class WalletServiceImpl implements WalletService {
         return transactionRepository.findAllByWallet(wallet);
     }
 
-    private Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
+    public Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
         Number amountObj = (Number) requestBody.get("amount");
         double amount = amountObj.doubleValue();
 
