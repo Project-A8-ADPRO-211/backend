@@ -13,8 +13,7 @@ public class CreditCard implements Topup {
 
     @Override
     public Wallet topup(Wallet wallet, Map<String, Object> requestBody) {
-        Number amountObj = (Number) requestBody.get("amount");
-        double amount = amountObj.doubleValue();
+        double amount = Double.parseDouble(requestBody.get("amount").toString());
         String noKartu = requestBody.get("noKartu").toString();
         String cvv = requestBody.get("cvv").toString();
 
