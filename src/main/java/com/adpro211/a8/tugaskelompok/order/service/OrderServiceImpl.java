@@ -15,7 +15,8 @@ import com.adpro211.a8.tugaskelompok.order.repository.OrderRepository;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
-import com.adpro211.a8.tugaskelompok.wallet.service.WalletServiceImpl;
+import com.adpro211.a8.tugaskelompok.wallet.repository.TransactionRepository;
+import com.adpro211.a8.tugaskelompok.wallet.service.WalletService;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -26,23 +27,30 @@ import java.util.*;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
     OrderRepository orderRepository;
 
-    @Autowired
     AccountService accountService;
 
-    @Autowired
     ItemRepository itemRepository;
 
-    @Autowired
     WalletRepository walletRepository;
 
-    WalletServiceImpl walletService;
+    TransactionRepository transactionRepository;
+
+    WalletService walletService;
 
     Map<String, OrderState> states = new HashMap<String, OrderState>();
 
-    public OrderServiceImpl() {
+    @Autowired
+    public OrderServiceImpl(@Autowired OrderRepository orderRepository, @Autowired AccountService accountService,
+            @Autowired ItemRepository itemRepository, @Autowired WalletRepository walletRepository,
+            @Autowired TransactionRepository transactionRepository, @Autowired WalletService walletService) {
+        this.orderRepository = orderRepository;
+        this.accountService = accountService;
+        this.itemRepository = itemRepository;
+        this.walletRepository = walletRepository;
+        this.transactionRepository = transactionRepository;
+        this.walletService = walletService;
         states.put("Open", new OpenState());
         states.put("Confirmed", new ConfirmedState());
         states.put("Ship", new ShipState());
@@ -171,17 +179,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public void createOrderTransaction(Wallet buyerWallet, Wallet sellerWallet, double price) {
+        Object amt = (Object) price;
         Map<String, Object> amount = new HashMap<String, Object>();
-        amount.put("amount", price);
+        amount.put("amount", amt);
         walletService.createTransaction(buyerWallet, "Buy", amount);
         walletService.createTransaction(sellerWallet, "Sell", amount);
     }
 
-    public boolean updateWalletBalance(Buyer buyer, Seller seller, double price) throws NullPointerException {
+    public void updateWalletBalance(Buyer buyer, Seller seller, double price) {
         Wallet buyerWallet = buyer.getWallet();
         Wallet sellerWallet = seller.getWallet();
-        if (buyerWallet == null || sellerWallet == null)
-            throw new NullPointerException();
         buyerWallet.setBalance(buyerWallet.getBalance() - price);
         sellerWallet.setBalance(sellerWallet.getBalance() + price);
         createOrderTransaction(buyerWallet, sellerWallet, price);
@@ -189,23 +196,20 @@ public class OrderServiceImpl implements OrderService {
         seller.setWallet(sellerWallet);
         walletRepository.save(buyerWallet);
         walletRepository.save(sellerWallet);
-        return true;
     }
 
     public Order payOrder(Order order) {
-        Buyer buyer;
-        Seller seller;
-        double price;
+        Buyer buyer = order.getBuyer();
+        Seller seller = order.getSeller();
+        double price = (double) order.getTotalPrice();
         if (!order.getStatus().equals("Open"))
             return order;
 
         try {
-            buyer = order.getBuyer();
-            seller = order.getSeller();
-            price = (double) order.getTotalPrice();
             updateWalletBalance(buyer, seller, price);
             order.orderPayed();
         } catch (NullPointerException e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This buyer or this seller might not exist");
         }
 
