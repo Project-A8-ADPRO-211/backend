@@ -58,8 +58,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet withdrawWallet(Wallet wallet, Map<String, Object> requestBody) {
         double balance = wallet.getBalance();
-        Number amountObj = (Number) requestBody.get("amount");
-        double amount = amountObj.doubleValue();
+        double amount = Double.parseDouble(requestBody.get("amount").toString());
 
         double currentBal = balance - amount;
         if (currentBal >= 0) {
@@ -82,8 +81,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
-        Number amountObj = (Number) requestBody.get("amount");
-        double amount = amountObj.doubleValue();
+        double amount = Double.parseDouble(requestBody.get("amount").toString());
 
         Transaction transaction = new Transaction(type, amount);
         transaction.setWallet(wallet);
