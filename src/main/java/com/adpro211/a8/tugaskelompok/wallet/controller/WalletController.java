@@ -1,5 +1,6 @@
 package com.adpro211.a8.tugaskelompok.wallet.controller;
 
+import com.adpro211.a8.tugaskelompok.auths.annotation.RequireLoggedIn;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
@@ -20,50 +21,41 @@ public class WalletController {
     @Autowired
     WalletService walletService;
 
-    @Autowired
-    AccountService accountService;
-
     @PostMapping(path = "/topup", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity topupWallet(@RequestParam String strategy, @RequestBody Map<String, Object> request) {
-        Wallet wallet = findWallet(request);
-
-        if (wallet == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public ResponseEntity topupWallet(
+            @RequestParam String strategy,
+            @RequestBody Map<String, Object> request,
+            @RequireLoggedIn Account account) {
+        Wallet wallet = findWallet(account);
 
         return ResponseEntity.ok(walletService.topupWallet(wallet, strategy, request));
     }
 
     @PostMapping(path = "/withdraw", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity withdrawWallet(@RequestBody Map<String, Object> request) {
-        Wallet wallet = findWallet(request);
-
-        if (wallet == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public ResponseEntity withdrawWallet(@RequestBody Map<String, Object> request, @RequireLoggedIn Account account) {
+        Wallet wallet = findWallet(account);
 
         return ResponseEntity.ok(walletService.withdrawWallet(wallet, request));
     }
 
     @GetMapping(path = "", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity getWallet(@RequestBody Map<String, Object> request) {
-        Number idObj = (Number) request.get("idWallet");
-        int id = idObj.intValue();
-
-        return ResponseEntity.ok(walletService.getWalletById(id));
+    public ResponseEntity getWallet(@RequireLoggedIn Account account) {
+        return ResponseEntity.ok(findWallet(account));
     }
 
     @GetMapping(path = "/transaction", produces = {"application/json"})
     @ResponseBody
-    public ResponseEntity getTransaction(@RequestBody Map<String, Object> request) {
-        Wallet wallet = findWallet(request);
+    public ResponseEntity getTransaction(@RequireLoggedIn Account account) {
+        Wallet wallet = findWallet(account);
 
         return ResponseEntity.ok(walletService.getTransactionByWallet(wallet));
     }
 
-    private Wallet findWallet(Map<String, Object> request) {
-        if (!request.containsKey("idWallet")) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        Number objIdWallet = (Number) request.get("idWallet");
-        int idWallet = objIdWallet.intValue();
+    private Wallet findWallet(Account account) {
+        int idWallet = account.getWallet().getId();
 
         return walletService.getWalletById(idWallet);
     }
