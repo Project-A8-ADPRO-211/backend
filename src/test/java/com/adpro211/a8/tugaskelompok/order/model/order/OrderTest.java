@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class OrderTest {
 
@@ -18,6 +19,7 @@ public class OrderTest {
     private Product product;
     private Buyer buyer;
     private Seller seller;
+    private LocalDateTime orderTime, paymentTime, shipTime, completedTime;
 
     @BeforeEach
     void setUp() {
@@ -58,6 +60,15 @@ public class OrderTest {
         order.setSeller(seller);
         order.setTotalPrice(0);
         order.setFinished(false);
+
+        orderTime = LocalDateTime.now();
+        order.setOrderTime(orderTime);
+        paymentTime = LocalDateTime.now();
+        order.setPaymentTime(paymentTime);
+        shipTime = LocalDateTime.now();
+        order.setShipTime(shipTime);
+        completedTime = LocalDateTime.now();
+        order.setCompletedTime(completedTime);
 
         List<Item> itemList = new ArrayList<Item>();
         itemList.add(item);
@@ -139,6 +150,31 @@ public class OrderTest {
     @Test
     void testGetWrongTotalPrice() {
         assertNotEquals(1000, order.getTotalPrice());
+    }
+
+    @Test
+    void testOrderTimeNotNull() {
+        assertNotNull(order.getOrderTime());
+    }
+
+    @Test
+    void testGetOrderTime() {
+        assertEquals(orderTime, order.getOrderTime());
+    }
+
+    @Test
+    void testGetPaymentTime() {
+        assertEquals(paymentTime, order.getPaymentTime());
+    }
+
+    @Test
+    void testGetShipTime() {
+        assertEquals(shipTime, order.getShipTime());
+    }
+
+    @Test
+    void testGetCompletedTime() {
+        assertEquals(completedTime, order.getCompletedTime());
     }
 
     @Test

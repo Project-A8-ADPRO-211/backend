@@ -89,6 +89,10 @@ public class OrderControllerTest {
         }
     }
 
+    static class OrderDataError {
+        public int notSeller;
+    }
+
     static class ItemData {
         public int quantity;
         public int productId;
@@ -97,6 +101,11 @@ public class OrderControllerTest {
             this.quantity = quantity;
             this.productId = productId;
         }
+    }
+
+    static class ItemDataError {
+        public int notQuantity;
+        public int notProductId;
     }
 
     @BeforeEach
@@ -166,6 +175,17 @@ public class OrderControllerTest {
     }
 
     @Test
+    void testControllerCreateOrderWithNoIdSeller() throws Exception {
+        when(accountService.getAccountById(buyer.getId())).thenReturn(this.buyer);
+        when(jwtService.verifyToken(anyString())).thenReturn("2");
+        when(accountService.getAccountById(seller.getId())).thenReturn(this.seller);
+
+        mvc.perform(post("/order/checkout").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new OrderDataError())).header("Authorization", "aaaaaaaaa"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void testControllerCreateOrderWithInvalidToken() throws Exception {
         mvc.perform(post("/order/checkout").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapToJson(new OrderData(1)))).andExpect(status().is4xxClientError());
@@ -194,6 +214,15 @@ public class OrderControllerTest {
     }
 
     @Test
+    void testControllerGetOrdersButBuyerIsNull() throws Exception {
+        when(accountService.getAccountById(buyer.getId())).thenReturn(null);
+        when(jwtService.verifyToken(anyString())).thenReturn("2");
+
+        mvc.perform(get("/order/all").param("strategy", "buyer").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void testControllerGetOrdersBySeller() throws Exception {
         when(accountService.getAccountById(seller.getId())).thenReturn(this.seller);
         when(jwtService.verifyToken(anyString())).thenReturn("1");
@@ -206,6 +235,15 @@ public class OrderControllerTest {
     void testControllerGetOrdersBySellerWithInvalidToken() throws Exception {
         mvc.perform(get("/order/all").param("strategy", "seller").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerGetOrdersButSellerIsNull() throws Exception {
+        when(accountService.getAccountById(seller.getId())).thenReturn(null);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
+
+        mvc.perform(get("/order/all").param("strategy", "seller").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -231,6 +269,26 @@ public class OrderControllerTest {
     }
 
     @Test
+    void testControllerCreateItemWrongRequestKey() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+        when(productService.getProductById(3)).thenReturn(product);
+        when(orderService.checkProductStock(2, product)).thenReturn(true);
+
+        mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new ItemDataError()))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerCreateItemStockInvalid() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+        when(productService.getProductById(3)).thenReturn(product);
+        when(orderService.checkProductStock(2, product)).thenReturn(false);
+
+        mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new ItemData(2, 3)))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void testControllerGetItemByIdSuccess() throws Exception {
         when(orderService.getItemById(5)).thenReturn(item);
         mvc.perform(get("/order/item/5").contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -249,6 +307,14 @@ public class OrderControllerTest {
 
         mvc.perform(put("/order/4/confirm").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerConfirmOrderFails() throws Exception {
+        when(orderService.getOrderById(4)).thenThrow(new NullPointerException());
+
+        mvc.perform(put("/order/4/confirm").contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

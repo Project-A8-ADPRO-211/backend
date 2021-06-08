@@ -120,4 +120,14 @@ public class WalletServiceTest {
     public void testWalletServiceGetTransactionByWallet() {
         assertEquals(new ArrayList<>(), walletService.getTransactionByWallet(wallet));
     }
+
+    @Test
+    public void testWalletServiceCreateTransaction() {
+        Map<String, Object> json = new HashMap<>();
+        json.put("amount", 10);
+
+        walletService.createTransaction(wallet, "mockType", json);
+
+        verify(transactionRepository, times(1)).save(any());
+    }
 }
