@@ -7,8 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.*;
 
 @Entity
 @Table(name = "transaction")
@@ -26,13 +25,13 @@ public class Transaction {
     @Column(name="amount", nullable = false)
     private double amount;
 
-    @Column(name="date", nullable = false)
-    private Date date;
+    @Column(name="datetime", nullable = false)
+    private LocalDateTime dateTime;
 
     public Transaction(String type, double amount) {
         this.type = type;
         this.amount = amount;
-        this.date = new Date();
+        this.dateTime = LocalDateTime.now();
     }
 
     @JsonBackReference
