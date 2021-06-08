@@ -19,7 +19,7 @@ public class ATM implements Topup {
     @Override
     public Wallet topup(Wallet wallet, Map<String, Object> requestBody) {
         double amount = Double.parseDouble(requestBody.get("amount").toString());
-            String noRekening = requestBody.get("noRekening").toString();
+        String noRekening = requestBody.get("noRekening").toString();
 
         double balance = wallet.getBalance();
         balance += amount;
