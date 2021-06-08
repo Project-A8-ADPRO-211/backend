@@ -145,57 +145,40 @@ public class WalletControllerTest {
                 .content(mapToJson(new TopUpWithCreditCardData(
                         10,"0123456","456"
                 )))).andExpect(status().isOk());
-
     }
 
-//    @Test
-//    public void testWalletControllerTopUpWalletFailed() throws Exception {
-//        when(accountService.getAccountById(1)).thenReturn(account);
-//        when(jwtService.verifyToken(anyString())).thenReturn("1");
-//
-//        mvc.perform(post("/wallet/topup").param("strategy", "ATM")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .header("Authorization", "aaaaa")
-//                .content(mapToJson(new TopupWithATMData(
-//                        1,10,"0123456"
-//                )))).andExpect(status().isNotFound());
-//    }
+    @Test
+    public void testWalletControllerWithdrawWalletSuccess() throws Exception {
+        when(accountService.getAccountById(1)).thenReturn(account);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
 
-//    @Test
-//    public void testWalletControllerWithdrawWalletSuccess() throws Exception {
-//        when(walletService.getWalletById(wallet.getId())).thenReturn(wallet);
-//
-//        mvc.perform(post("/wallet/withdraw")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(mapToJson(new WithdrawData(
-//                        1, 10, "0123456"
-//                )))).andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    public void testWalletControllerWithdrawWalletFailed() throws Exception {
-//        mvc.perform(post("/wallet/withdraw")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(mapToJson(new WithdrawData(
-//                        1, 10, "0123456"
-//                )))).andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void testWalletControllerGetWallet() throws Exception {
-//        mvc.perform(get("/wallet/")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(mapToJson(new WalletData(
-//                        1
-//                )))).andExpect(status().is2xxSuccessful());
-//    }
-//
-//    @Test
-//    public void testWalletControllerGetTransaction() throws Exception {
-//        mvc.perform(get("/wallet/transaction")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(mapToJson(new WalletData(
-//                        1
-//                )))).andExpect(status().is2xxSuccessful());
-//    }
+        mvc.perform(post("/wallet/withdraw")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaa")
+                .content(mapToJson(new WithdrawData(
+                        10, "0123456"
+                )))).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testWalletControllerGetWallet() throws Exception {
+        when(accountService.getAccountById(1)).thenReturn(account);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
+
+        mvc.perform(get("/wallet/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaa"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void testWalletControllerGetTransaction() throws Exception {
+        when(accountService.getAccountById(1)).thenReturn(account);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
+
+        mvc.perform(get("/wallet/transaction")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "aaaaa"))
+                .andExpect(status().is2xxSuccessful());
+    }
 }
