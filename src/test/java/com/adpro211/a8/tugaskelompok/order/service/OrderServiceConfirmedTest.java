@@ -12,6 +12,7 @@ import com.adpro211.a8.tugaskelompok.product.model.Product;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import com.adpro211.a8.tugaskelompok.wallet.repository.WalletRepository;
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,6 +53,7 @@ public class OrderServiceConfirmedTest {
     private Product product;
     private Wallet walletBuyer;
     private Wallet walletSeller;
+    private LocalDateTime paymentTime;
 
     @BeforeEach
     void setUp() {
@@ -112,6 +114,8 @@ public class OrderServiceConfirmedTest {
         order.setBuyer(buyer);
         order.setSeller(seller);
         order.setStatus(state.getStateDescription());
+        paymentTime = LocalDateTime.now();
+        order.setPaymentTime(paymentTime);
 
         List<Item> itemList = new ArrayList<Item>();
         itemList.add(item);
@@ -125,6 +129,7 @@ public class OrderServiceConfirmedTest {
     void testConfirmOrderDoNothing() {
         Order toConfirm = orderService.confirmOrder(order);
         assertEquals("Confirmed", toConfirm.getStatus());
+        assertNotNull(toConfirm.getPaymentTime());
         assertFalse(toConfirm.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -142,6 +147,7 @@ public class OrderServiceConfirmedTest {
         order.setPaymentReceived(false);
         Order toShip = orderService.shipOrder(order);
         assertNotEquals("Ship", toShip.getStatus());
+        assertNull(toShip.getShipTime());
         assertFalse(toShip.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -150,6 +156,7 @@ public class OrderServiceConfirmedTest {
     void testShipOrderSuccessWhenOrderPayed() {
         Order toShip = orderService.shipOrder(order);
         assertEquals("Ship", toShip.getStatus());
+        assertNotNull(toShip.getShipTime());
         assertFalse(toShip.isFinished());
         verify(orderRepository, times(1)).save(any());
     }
@@ -158,6 +165,7 @@ public class OrderServiceConfirmedTest {
     void testDeliverOrderFailsWhenStateIsConfirmed() {
         Order toDeliver = orderService.shipOrder(order);
         assertNotEquals("Delivered", toDeliver.getStatus());
+        assertNull(toDeliver.getCompletedTime());
         assertFalse(toDeliver.isFinished());
         verify(orderRepository, times(1)).save(any());
     }

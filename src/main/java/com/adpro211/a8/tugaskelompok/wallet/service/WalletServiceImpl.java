@@ -81,8 +81,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody) {
-        double amount = Double.parseDouble(requestBody.get("amount").toString());
-
+        Number amountObj = (Number) requestBody.get("amount");
+        double amount = amountObj.doubleValue();
         Transaction transaction = new Transaction(type, amount);
         transaction.setWallet(wallet);
         transactionRepository.save(transaction);

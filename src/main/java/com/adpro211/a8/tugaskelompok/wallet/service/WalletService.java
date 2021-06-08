@@ -8,8 +8,14 @@ import java.util.Map;
 
 public interface WalletService {
     Wallet createWallet(Account account);
+
     Wallet topupWallet(Wallet wallet, String type, Map<String, Object> requestBody);
+
     Wallet withdrawWallet(Wallet wallet, Map<String, Object> requestBody);
+
     Wallet getWalletById(int id);
+
     Iterable<Transaction> getTransactionByWallet(Wallet wallet);
+
+    Transaction createTransaction(Wallet wallet, String type, Map<String, Object> requestBody);
 }
