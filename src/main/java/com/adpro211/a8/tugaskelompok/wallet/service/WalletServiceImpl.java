@@ -72,7 +72,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet getWalletById(int id) {
-        return walletRepository.findById(id).orElse(null);
+        return walletRepository.findWalletById(id);
     }
 
     @Override

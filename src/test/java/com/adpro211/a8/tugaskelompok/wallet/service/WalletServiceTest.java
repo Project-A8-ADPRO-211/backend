@@ -130,4 +130,11 @@ public class WalletServiceTest {
 
         verify(transactionRepository, times(1)).save(any());
     }
+
+    @Test
+    public void testWalletServiceGetWalletById() {
+        when(walletRepository.findWalletById(1)).thenReturn(wallet);
+
+        assertEquals(wallet, walletService.getWalletById(wallet.getId()));
+    }
 }

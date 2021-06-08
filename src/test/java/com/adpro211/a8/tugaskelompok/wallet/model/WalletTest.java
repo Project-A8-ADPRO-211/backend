@@ -2,6 +2,7 @@ package com.adpro211.a8.tugaskelompok.wallet.model;
 
 import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.auths.models.account.Buyer;
+import com.adpro211.a8.tugaskelompok.wallet.models.Transaction;
 import com.adpro211.a8.tugaskelompok.wallet.models.Wallet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,5 +43,10 @@ public class WalletTest {
     @Test
     public void testWalletGetBalance() {
         assertEquals(10, wallet.getBalance());
+    }
+
+    @Test
+    public void testWalletGetTransaction() {
+        assertEquals(null, wallet.getTransactions());
     }
 }
