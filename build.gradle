@@ -8,6 +8,7 @@ plugins {
 
 group = 'com.adpro211.a8'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -74,10 +75,7 @@ asciidoctor {
 jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    '**/*Application**',
-                    '**/chat/controller'
-            ])
+            fileTree(dir: it, exclude: ['**/*Application**'])
         }))
     }
     reports {
