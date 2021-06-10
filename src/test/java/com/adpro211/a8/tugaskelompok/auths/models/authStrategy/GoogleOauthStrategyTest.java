@@ -21,6 +21,18 @@ class GoogleOauthStrategyTest {
     }
 
     @Test
+    void getStrategyName() {
+        assertEquals("google", oauthStrategy.getStrategyName());
+    }
+
+    @Test
+    void checkVerifier() {
+        GoogleOauthStrategy.setVerifier(null);
+        assertEquals(OAuthVerifier.class.getName() ,GoogleOauthStrategy.getVerifier().getClass().getName());
+    }
+
+
+    @Test
     void authenticateSuccess() {
         OAuthVerifier.GoogleOAuthData data = new OAuthVerifier.GoogleOAuthData("a", "a@bdd.com", "1");
         GoogleOauthStrategy.setVerifier(new FakeOAuthVerifier(data));
