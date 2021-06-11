@@ -165,6 +165,8 @@ class ChatServiceImplTest {
         defaultRoom.setLastSentMessage(chatMessage);
         defaultRoom.setChatMessages(chatRoomMsg);
 
+        assertEquals(chatMessage.getId(), 1);
+
         assertNull(defaultRoom.getLastSeenMessage());
         chatService.getMessageInRoom(defaultRoom, accountA);
         assertNull(defaultRoom.getLastSeenMessage());

@@ -28,6 +28,7 @@ class GoogleOauthStrategyTest {
     @Test
     void checkVerifier() {
         GoogleOauthStrategy.setVerifier(null);
+        OAuthVerifier.construct("djdnjnjfnjNF");
         assertEquals(OAuthVerifier.class.getName() ,GoogleOauthStrategy.getVerifier().getClass().getName());
     }
 
