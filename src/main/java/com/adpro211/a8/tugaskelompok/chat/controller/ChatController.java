@@ -6,7 +6,8 @@ import com.adpro211.a8.tugaskelompok.auths.service.AccountService;
 import com.adpro211.a8.tugaskelompok.chat.models.ChatMessage;
 import com.adpro211.a8.tugaskelompok.chat.models.ChatRoom;
 import com.adpro211.a8.tugaskelompok.chat.service.ChatService;
-import io.micrometer.core.annotation.Timed;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,13 @@ public class ChatController {
     @Autowired
     ChatService chatService;
 
+    @Getter
+    @AllArgsConstructor
+    static class MsgListResponse {
+        private List<ChatMessage> chatMessageList;
+        private ChatMessage lastReadChatMessage;
+    }
+
     @GetMapping(produces = {"application/json"})
     @ResponseBody
     public ResponseEntity<List<ChatRoom>> getChatRoomUser(@RequireLoggedIn Account account) {
@@ -33,12 +41,16 @@ public class ChatController {
 
     @GetMapping(produces = {"application/json"}, path = "/{id}")
     @ResponseBody
-    public ResponseEntity<List<ChatMessage>> getChatRoom(@PathVariable long id, @RequireLoggedIn Account account) {
+    public ResponseEntity<MsgListResponse> getChatRoom(@PathVariable long id, @RequireLoggedIn Account account, @RequestParam(required = false) Boolean visible) {
         ChatRoom room = chatService.getChatRoomById(id);
         if (room == null || !room.isParticipant(account)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(chatService.getMessageInRoom(room, account));
+        if (visible) {
+            return ResponseEntity.ok(new MsgListResponse(chatService.getMessageInRoom(room, account), room.getLastSeenMessage()));
+        } else {
+            return ResponseEntity.ok(new MsgListResponse(room.getChatMessages(), room.getLastSeenMessage()));
+        }
     }
 
     @PostMapping(produces = {"application/json"}, path = "/{id}")
