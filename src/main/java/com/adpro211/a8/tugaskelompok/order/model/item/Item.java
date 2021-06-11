@@ -4,13 +4,16 @@ import com.adpro211.a8.tugaskelompok.auths.models.account.Account;
 import com.adpro211.a8.tugaskelompok.order.model.order.Order;
 import com.adpro211.a8.tugaskelompok.product.model.Product;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Setter;
 
 @Entity
 @Table(name = "item")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Item {
 
