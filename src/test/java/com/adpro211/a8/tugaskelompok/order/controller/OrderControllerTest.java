@@ -103,6 +103,14 @@ public class OrderControllerTest {
         }
     }
 
+    static class ItemDataOnlyQuantity {
+        public int quantity;
+
+        public ItemDataOnlyQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+    }
+
     static class ItemDataError {
         public int notQuantity;
         public int notProductId;
@@ -213,6 +221,7 @@ public class OrderControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
+
     @Test
     void testControllerGetOrdersButBuyerIsNull() throws Exception {
         when(accountService.getAccountById(buyer.getId())).thenReturn(null);
@@ -229,6 +238,15 @@ public class OrderControllerTest {
 
         mvc.perform(get("/order/all").param("strategy", "seller").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "aaaaaaaaa")).andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testControllerGetOrdersWrong() throws Exception {
+        when(accountService.getAccountById(seller.getId())).thenReturn(this.seller);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
+
+        mvc.perform(get("/order/all").param("strategy", "admin").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -276,6 +294,16 @@ public class OrderControllerTest {
 
         mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapToJson(new ItemDataError()))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void testControllerCreateItemOnlyOneequestKey() throws Exception {
+        when(orderService.getOrderById(4)).thenReturn(order);
+        when(productService.getProductById(3)).thenReturn(product);
+        when(orderService.checkProductStock(2, product)).thenReturn(true);
+
+        mvc.perform(post("/order/4/create-item").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapToJson(new ItemDataOnlyQuantity(1)))).andExpect(status().is4xxClientError());
     }
 
     @Test
