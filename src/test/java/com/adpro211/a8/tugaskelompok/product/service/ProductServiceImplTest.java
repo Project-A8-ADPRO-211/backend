@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -76,10 +77,27 @@ public class ProductServiceImplTest {
     }
 
     @Test
+    void testCreateProductDuplicateName() {
+        when(productRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
+        assertThrows(ResponseStatusException.class, () -> {
+            productService.createNewProduct("aa", "desc", 20, 15, "bb", this.seller);
+        });
+    }
+
+    @Test
     void testCreateNewReviewSuccess() {
         Review toBeDuplicated = new Review();
         productService.createNewReview(2, toBeDuplicated, this.buyer);
         verify(reviewRepository, times(1)).save(any());
+    }
+
+    @Test
+    void testCreateNewReviewDuplicate() {
+        Review toBeDuplicated = new Review();
+        when(reviewRepository.findByReviewerAndProductReview(any(), any())).thenReturn(toBeDuplicated);
+        assertThrows(ResponseStatusException.class, () -> {
+            productService.createNewReview(2, toBeDuplicated, this.buyer);
+        });
     }
 
     @Test

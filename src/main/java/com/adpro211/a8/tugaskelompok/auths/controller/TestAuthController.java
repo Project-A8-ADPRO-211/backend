@@ -45,4 +45,10 @@ public class TestAuthController {
         return ResponseEntity.ok(account);
     }
 
+    @GetMapping(produces = {"application/json"}, path = "/wrong")
+    @ResponseBody
+    public ResponseEntity<Account> getSellerAsAccountWrong(@RequireAdmin Buyer account) {
+        return ResponseEntity.ok(account);
+    }
+
 }

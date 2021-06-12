@@ -56,6 +56,8 @@ public class OrderController {
             } else if (strategy.equals("seller")) {
                 Seller seller = (Seller) account;
                 orders = orderService.getOrdersBySeller(seller);
+            } else {
+                throw new IllegalArgumentException();
             }
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

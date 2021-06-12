@@ -23,9 +23,13 @@ class MailgunSenderImplTest {
 
     @Test
     void testSendEmail() throws Exception {
+        MailgunSenderImpl mailgunSender = new MailgunSenderImpl();
+        MailgunSenderImpl.sendEmail("","","","","","","");
         MailgunSenderImpl.sendRealEmail(true);
         MailgunSenderImpl.sendEmail("","","","","","","");
         MailgunSenderImpl.sendRealEmailRequest(true);
+        MailgunSenderImpl.sendEmail("","","","","","","");
+        MailgunSenderImpl.sendRealEmailRequest(false);
         MailgunSenderImpl.sendEmail("","","","","","","");
         MailgunSenderImpl.sendRealEmail(false);
         MailgunSenderImpl.sendRealEmailRequest(false);

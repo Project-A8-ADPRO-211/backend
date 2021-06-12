@@ -30,7 +30,7 @@ public class MailgunSenderImpl{
                 .field("subject", subject)
                 .field("text", text)
                 .field("o", "testmode:" + (sendTheRequestNotTheEmail ? "true" : "false"))
-                .asStringAsync(response -> {});
+                .asStringAsync();
     }
 
 }
