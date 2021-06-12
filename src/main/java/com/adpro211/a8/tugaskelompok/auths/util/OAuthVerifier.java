@@ -22,7 +22,7 @@ public class OAuthVerifier {
         String uid;
     }
 
-    GoogleIdTokenVerifier verifier;
+    private static GoogleIdTokenVerifier verifier;
 
     private static OAuthVerifier instance;
 
@@ -30,6 +30,10 @@ public class OAuthVerifier {
         verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(googleClientId))
                 .build();
+    }
+
+    public static void forceSetVerifier(GoogleIdTokenVerifier verifier) {
+        OAuthVerifier.verifier = verifier;
     }
 
     public static void construct(String googleClientId)  {

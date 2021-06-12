@@ -118,6 +118,12 @@ class AccountServiceImplTest {
     }
 
     @Test
+    void testOAuthVerifier() {
+        accountService.setVerifier(null);
+        assertEquals(OAuthVerifier.class, accountService.getVerifier().getClass());
+    }
+
+    @Test
     void testGetByEmail() {
 
         Buyer buyer = new Buyer();

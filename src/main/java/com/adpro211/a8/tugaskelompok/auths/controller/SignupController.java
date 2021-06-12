@@ -71,8 +71,8 @@ public class SignupController {
     @ResponseBody
     public ResponseEntity<Account> signUpPassword(@RequestBody UserSignUp signUpData) {
         Account account = accountService.createNewAccount(signUpData.name, signUpData.email, signUpData.password, signUpData.type);
-        BackgroundJob.enqueue(() -> MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
-                "Welcome to our project", apiKey, domain, fromName, fromEmail));
+//        BackgroundJob.enqueue(() -> MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
+//                "Welcome to our project", apiKey, domain, fromName, fromEmail));
         return ResponseEntity.ok(account);
     }
 
@@ -81,10 +81,10 @@ public class SignupController {
     @ResponseBody
     public ResponseEntity<Account> signUpGoogle(@RequestBody UserSignUpGoogle signUpData) {
         Account account = accountService.createNewAccountGoogle(signUpData.token, signUpData.accType);
-        BackgroundJob.enqueue(() -> {
-            MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
-                    "Welcome to our project", apiKey, domain, fromName, fromEmail);
-        });
+//        BackgroundJob.enqueue(() -> {
+//            MailgunSenderImpl.sendEmail(account.getEmail(), "Welcome To Kantin Virtual",
+//                    "Welcome to our project", apiKey, domain, fromName, fromEmail);
+//        });
         return ResponseEntity.ok(account);
     }
 }

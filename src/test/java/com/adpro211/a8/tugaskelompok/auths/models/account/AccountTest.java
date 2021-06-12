@@ -9,6 +9,9 @@ class AccountTest {
     @Test
     public void testAccountAttribute() {
         Account account = new Buyer();
+        account.setAuthStrategies(null);
+        account.setProductList(null);
+        account.setReviewList(null);
         assertNull(account.getProductList());
         assertNull(account.getAuthStrategies());
         assertNull(account.getReviewList());

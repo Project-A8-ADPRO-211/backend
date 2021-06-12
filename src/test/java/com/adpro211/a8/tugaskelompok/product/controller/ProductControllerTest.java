@@ -163,6 +163,12 @@ public class ProductControllerTest {
     }
 
     @Test
+    void testControllerGetProductTenantError() throws Exception {
+        when(accountService.getAccountById(13)).thenThrow(Error.class);
+        mvc.perform(get("/product/tenant/13").contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void testControllerSearchProductSuccess() throws Exception {
         mvc.perform(get("/product/name/bak").contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful());
     }
