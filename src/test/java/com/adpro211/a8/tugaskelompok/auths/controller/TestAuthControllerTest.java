@@ -133,4 +133,13 @@ class TestAuthControllerTest {
                 .header("Authorization", "aaaaaaaaa")).andExpect(status().is2xxSuccessful());
     }
 
+    @Test
+    void testControllerGetWrongAccount() throws Exception {
+        when(accountService.getAccountById(1)).thenReturn(this.administrator);
+        when(jwtService.verifyToken(anyString())).thenReturn("1");
+
+        mvc.perform(get("/test/wrong").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "aaaaaaaaa")).andExpect(status().is2xxSuccessful());
+    }
+
 }
